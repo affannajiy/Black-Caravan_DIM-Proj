@@ -1,0 +1,911 @@
+--FULL CREATION
+--NORMAL ENTITY CREATION
+
+CREATE TABLE Person (
+                        Person_IC_Num VARCHAR2(20) PRIMARY KEY,
+                        Person_name varchar2(100),
+                        Person_age INT
+);
+
+CREATE TABLE Customer (
+                          Customer_id INT,
+                          Customer_personal_email VARCHAR(100),
+                          Person_IC_Num VARCHAR2(20),
+                          Customer_table_number INT,
+                          Customer_walk_in_date TIMESTAMP,
+                          Customer_walk_out_date TIMESTAMP,
+                          Customer_total_spent DECIMAL(20,2),
+                          Customer_dining_option VARCHAR2(255),
+                          Customer_time_spent VARCHAR2(20),
+                          Customer_dining_purpose VARCHAR2(255),
+                          Customer_phoneNumber  VARCHAR2(20),
+                          PRIMARY KEY (Customer_id, Customer_personal_email),
+                          foreign key (Person_IC_Num) references PERSON(Person_IC_Num)
+);
+
+CREATE TABLE Delivery_Person (
+                                 DeliveryPerson_id INT,
+                                 DeliveryPerson_License VARCHAR2(30),
+                                 DeliveryPerson_number_plate VARCHAR(10),
+                                 Person_IC_Num VARCHAR2(20),
+                                 DeliveryPerson_address VARCHAR2(100),
+                                 DeliveryPerson_method VARCHAR2(100),
+                                 DeliveryPerson_status VARCHAR(20),
+                                 DeliveryPerson_estimatedTime TIMESTAMP,
+                                 DeliveryPerson_actualTime TIMESTAMP,
+                                 DeliveryPerson_fee DECIMAL(10,2),
+                                 DeliveryPerson_Company VARCHAR2(100) NOT NULL,
+                                 PRIMARY KEY (DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate),
+                                 foreign key (Person_IC_Num) references PERSON(Person_IC_Num)
+);
+
+CREATE TABLE Employee (
+                          Employee_id INT,
+                          Person_IC_Num VARCHAR2(20),
+                          Employee_HireDate DATE,
+                          Employee_EdLevel VARCHAR2(100),
+                          PRIMARY KEY (Employee_id),
+                          foreign key (Person_IC_Num) references PERSON(Person_IC_Num)
+);
+
+CREATE TABLE Owner (
+                       Owner_id INT,
+                       Owner_tax_no VARCHAR2(50),
+                       Person_IC_Num VARCHAR(20),
+                       Employee_id INT,
+                       Owner_short_term_goal VARCHAR2(255),
+                       Owner_percentage_of_company DECIMAL(3,1),
+                       Owner_funds_deposited DECIMAL(10,2),
+                       Owner_total_investment DECIMAL(10,2),
+                       Owner_profit_ratio DECIMAL(3,1),
+                       Owner_authority_level VARCHAR2(20),
+                       Owner_management_style VARCHAR2(50),
+                       Owner_risk_tolerance VARCHAR2(20),
+                       PRIMARY KEY (Owner_id, Owner_tax_no),
+                       foreign key (Person_IC_Num) references PERSON(Person_IC_Num),
+                       foreign key (Employee_id) references EMPLOYEE (Employee_id)
+);
+
+CREATE TABLE Staff (
+                       Staff_id INT,
+                       Staff_work_email VARCHAR2(100),
+                       Employee_id INT,
+                       Person_IC_Num VARCHAR2(20),
+                       Staff_job_description VARCHAR2(255),
+                       Staff_stopwork_date DATE,
+                       Staff_penalties VARCHAR2(50),
+                       Staff_work_performance VARCHAR2(20),
+                       Staff_health_issues VARCHAR2(50),
+                       Staff_preferred_job_scope VARCHAR2(100),
+                       Staff_future_role VARCHAR2(100),
+                       Staff_position VARCHAR2(100),
+                       PRIMARY KEY (Staff_id, Staff_work_email),
+                       foreign key (Employee_id) references Employee(Employee_id),
+                       foreign key (Person_IC_Num) references Person(Person_IC_Num)
+);
+
+CREATE TABLE Storage (
+                         Storage_id INT,
+                         Storage_Barcode varchar2(100),
+                         Storage_acquisition_date DATE,
+                         PRIMARY KEY (Storage_id)
+);
+
+CREATE TABLE Franchise (
+                           Franchise_id INT,
+                           Franchise_code VARCHAR2(20),
+                           Franchise_contact_num VARCHAR2(100) NOT NULL,
+                           Franchise_address VARCHAR2(255),
+                           Franchise_postcode VARCHAR2(20),
+                           Franchise_state VARCHAR2(50),
+                           Franchise_region VARCHAR2(50),
+                           Franchise_location_type VARCHAR2(100),
+                           Franchise_operating_hour VARCHAR(20),
+                           Franchise_name VARCHAR2(100),
+                           PRIMARY KEY (Franchise_id, Franchise_code)
+);
+
+
+CREATE TABLE Reservation (
+                             Reservation_id INT,
+                             Reservation_code VARCHAR2(20),
+                             Customer_id INT,
+                             Customer_personal_email VARCHAR2(100),
+                             Franchise_id INT,
+                             Franchise_code VARCHAR2(20),
+                             Reservation_start_time TIMESTAMP,
+                             Reservation_end_time TIMESTAMP,
+                             Reservation_confirmed VARCHAR2(20),
+                             Reservation_expiration TIMESTAMP,
+                             Reservation_table_no INT,
+                             Reservation_capacity INT,
+                             Reservation_seating VARCHAR2(50),
+                             Reservation_requestDetails VARCHAR2(255),
+                             PRIMARY KEY (Reservation_id, Reservation_code),
+                             foreign key (Customer_id, Customer_personal_email) references Customer(Customer_id, Customer_personal_email),
+                             foreign key (Franchise_id, Franchise_code) references Franchise(Franchise_id, Franchise_code)
+);
+
+CREATE TABLE Orders (
+                        Order_id INT,
+                        Order_code VARCHAR2(20),
+                        Franchise_id INT,
+                        Franchise_code VARCHAR2(20),
+                        Reservation_id INT,
+                        Reservation_code VARCHAR2(20),
+                        Order_start_time VARCHAR2(10),
+                        Order_date DATE,
+                        Order_totalQuantityProduct INT,
+                        Order_end_time VARCHAR2(10),
+                        Order_add_on VARCHAR2(100),
+                        Order_remarks VARCHAR2(100),
+                        Order_table_number INT,
+                        Order_time_taken VARCHAR2(10),
+                        PRIMARY KEY (Order_id, Order_code),
+                        foreign key (Franchise_id, Franchise_code) references Franchise(Franchise_id, Franchise_code),
+                        foreign key (Reservation_id, Reservation_code) references Reservation(Reservation_id, Reservation_code)
+);
+
+CREATE TABLE Product (
+                         Product_id INT,
+                         Product_Availability VARCHAR2(20),
+                         Product_Price DECIMAL(6,2),
+                         PRIMARY KEY (Product_id)
+);
+
+CREATE TABLE Promotion (
+                           Promotion_id INT,
+                           Promotion_refNo VARCHAR2(20),
+                           Promotion_date_start DATE,
+                           Promotion_date_end DATE,
+                           Promotion_food_list VARCHAR2(255),
+                           Promotion_drink_list VARCHAR2(255),
+                           Promotion_discount VARCHAR2(100),
+                           Promotion_name VARCHAR2(100),
+                           Promotion_duration VARCHAR2(50),
+                           Promotion_reason VARCHAR2(100),
+                           PRIMARY KEY (Promotion_id, Promotion_refNo)
+);
+
+CREATE TABLE Supplier (
+                          Supplier_id INT,
+                          Supplier_ssm varchar2(50),
+                          Supplier_companyName varchar2(100),
+                          Supplier_contactName varchar2(50),
+                          Supplier_phoneNumber varchar(50),
+                          Supplier_address varchar2(100),
+                          Supplier_productType varchar2(50),
+                          Supplier_supplyFrequency varchar2(100),
+                          Supplier_paymentType varchar2(50),
+                          Supplier_email varchar2(100),
+                          PRIMARY KEY (Supplier_id, Supplier_ssm)
+);
+
+CREATE TABLE Asset (
+                       Asset_id INT,
+                       Asset_code VARCHAR2(50),
+                       Storage_id INT,
+                       Supplier_id INT,
+                       Supplier_ssm VARCHAR2(50),
+                       Asset_category varchar2(100),
+                       Asset_start_date DATE,
+                       Asset_dispose_date DATE,
+                       Asset_lifespan VARCHAR2(20),
+                       Asset_description VARCHAR2(100),
+                       Asset_picture VARCHAR2(100),
+                       Asset_last_maintenance_date DATE,
+                       Asset_next_maintenance_date DATE,
+                       PRIMARY KEY (Asset_id, Asset_code),
+                       foreign key (Storage_id) references STORAGE(Storage_id),
+                       foreign key (Supplier_id, Supplier_ssm) references SUPPLIER(Supplier_id, Supplier_ssm)
+);
+
+CREATE TABLE SupplierItem (
+                              SupplierItem_id INT,
+                              SupplierItem_code VARCHAR2(50),
+                              Supplier_id INT,
+                              Supplier_ssm VARCHAR2(50),
+                              SupplierItem_Name VARCHAR2(50),
+                              SupplierItem_category VARCHAR2(50),
+                              Qty_per_unit INT,
+                              SupplierItem_unit_price DECIMAL(8,2),
+                              Available_Stock DECIMAL(8,2),
+                              Expiration_date DATE,
+                              Last_ordered_date DATE,
+                              SupplierItem_quantity INT,
+                              PRIMARY KEY (SupplierItem_id, SupplierItem_code),
+                              foreign key (Supplier_id, Supplier_ssm) references Supplier(Supplier_id, Supplier_ssm)
+);
+
+CREATE TABLE Payslip (
+                         Payslip_id INT,
+                         Payslip_code VARCHAR(20),
+                         Payslip_scheduled_time VARCHAR2(10),
+                         Payslip_received_time VARCHAR2(10),
+                         Payslip_gross_salary DECIMAL(8,2),
+                         Payslip_deductions DECIMAL(8,2),
+                         Payslip_net_salary DECIMAL(8,2),
+                         Payslip_payment_date DATE,
+                         Payslip_account_number VARCHAR(50),
+                         Payslip_status VARCHAR(50),
+                         PRIMARY KEY (Payslip_id, Payslip_code)
+);
+
+CREATE TABLE Shift (
+                       Shift_id INT,
+                       Shift_code VARCHAR(20),
+                       Payslip_id INT,
+                       Payslip_code VARCHAR2(20),
+                       Franchise_id INT,
+                       Franchise_code VARCHAR2(20),
+                       Shift_start_time VARCHAR2(10),
+                       Shift_end_time VARCHAR2(10),
+                       Shift_role VARCHAR2(100),
+                       Shift_description VARCHAR2(255),
+                       Shift_pay_per_hour DECIMAL(8,2),
+                       Shift_start_date DATE,
+                       Shift_end_date DATE,
+                       Shift_duration_hours VARCHAR2(10),
+                       PRIMARY KEY (Shift_id, Shift_code),
+                       foreign key (Payslip_id, Payslip_code) references PAYSLIP(Payslip_id, Payslip_code),
+                       foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+CREATE TABLE Attendance (
+                            Attendance_id INT,
+                            Attendance_code VARCHAR(20),
+                            Payslip_id INT,
+                            Payslip_code VARCHAR2(20),
+                            Franchise_id INT,
+                            Franchise_code VARCHAR2(20),
+                            Attendance_date DATE,
+                            Attendance_checkInTime VARCHAR2(10),
+                            Attendance_checkOutTime VARCHAR2(10),
+                            Attendance_hours_worked NUMERIC(6,2),
+                            Attendance_status VARCHAR(50),
+                            Attendance_reason VARCHAR(255),
+                            Attendance_overtime_hours NUMERIC(6,2),
+                            Attendance_shiftType VARCHAR(50),
+                            PRIMARY KEY (Attendance_id, Attendance_code),
+                            foreign key (Payslip_id, Payslip_code) references PAYSLIP(Payslip_id, Payslip_code),
+                            foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+CREATE TABLE Leave (
+                       Leave_id INT,
+                       Leave_code VARCHAR2(20),
+                       Payslip_id INT,
+                       Payslip_code VARCHAR2(20),
+                       Franchise_id INT,
+                       Franchise_code VARCHAR2(20),
+                       Leave_start_time VARCHAR2(10),
+                       Leave_end_time VARCHAR2(10),
+                       Leave_duration_day VARCHAR2(50),
+                       Leave_reason VARCHAR2(255),
+                       Leave_left NUMERIC(8,2),
+                       Leave_end_date DATE,
+                       Leave_start_date DATE,
+                       Leave_duration_hours VARCHAR2(10),
+                       PRIMARY KEY (Leave_id, Leave_code),
+                       foreign key (Payslip_id, Payslip_code) references PAYSLIP(Payslip_id, Payslip_code),
+                       foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+CREATE TABLE Food (
+                      Food_id INT,
+                      Food_code VARCHAR2(20),
+                      Product_id INT,
+                      Food_picture VARCHAR2(50),
+                      Food_description VARCHAR(255),
+                      Food_cost DECIMAL(6,2),
+                      Food_servingSize VARCHAR2(50),
+                      Food_availabilityStatus VARCHAR2(50),
+                      Food_availabilityStock VARCHAR2(50),
+                      Food_category VARCHAR2(100),
+                      Food_cookingMethod VARCHAR(100),
+                      PRIMARY KEY (Food_id, Food_code),
+                      foreign key (Product_id) references PRODUCT(Product_id)
+);
+
+CREATE TABLE Drink (
+                       Drink_id INT,
+                       Drink_code VARCHAR(20),
+                       Product_id INT,
+                       Drink_picture VARCHAR2(50),
+                       Drink_cost DECIMAL(6,2),
+                       Drink_availabilityStock VARCHAR2(50),
+                       Drink_category VARCHAR2(100),
+                       Drink_temperature VARCHAR2(50),
+                       Drink_carbonationStatus VARCHAR2(50),
+                       Drink_availabilityStatus VARCHAR2(50),
+                       Drink_size VARCHAR2(50),
+                       PRIMARY KEY (Drink_id, Drink_code),
+                       foreign key (Product_id) references PRODUCT(Product_id)
+);
+
+CREATE TABLE Asset_Log (
+                           AssetLog_id INT,
+                           AssetLog_code VARCHAR2(20),
+                           Asset_id INT,
+                           Asset_code VARCHAR2(20),
+                           AssetLog_usage_start_time VARCHAR2(10),
+                           AssetLog_usage_end_time VARCHAR2(20),
+                           AssetLog_usage_date DATE,
+                           AssetLog_usage_duration VARCHAR2(10), -- Changed from DATETIME to TIMESTAMP for Oracle compatibility
+                           AssetLog_description VARCHAR2(255),
+                           AssetLog_remarks VARCHAR2(255),
+                           AssetLog_condition VARCHAR2(50),
+                           AssetLog_location_used VARCHAR2(100),
+                           PRIMARY KEY (AssetLog_id, AssetLog_code),
+                           foreign key (Asset_id, Asset_code) references Asset(Asset_id, Asset_code)
+);
+
+CREATE TABLE Feedback (
+                          Feedback_id INT,
+                          Feedback_Code VARCHAR2(20),
+                          Feedback_type VARCHAR2(50),
+                          Feedback_timeReceived VARCHAR2(10),
+                          Feedback_dateReceived DATE,
+                          Feedback_comments VARCHAR2(255),
+                          Feedback_response_desc VARCHAR2(255),
+                          Feedback_responseStatus VARCHAR2(50),
+                          Feedback_foodRating NUMBER(2,1),  -- Allows decimal ratings (e.g., 4.5)
+                          Feedback_serviceRating NUMBER(2,1),  -- Allows decimal ratings (e.g., 4.0)
+                          PRIMARY KEY (Feedback_id, Feedback_Code)
+);
+
+CREATE TABLE Inventory (
+                           Inventory_id INT,
+                           Inventory_code VARCHAR2(20),
+                           Storage_id INT,
+                           Inventory_quantity_in_stock INT,
+                           Inventory_unit_of_measure VARCHAR2(50),
+                           Inventory_location VARCHAR2(100),
+                           Inventory_min_stock_level INT,
+                           Inventory_max_stock_level INT,
+                           Inventory_last_updated TIMESTAMP,  -- Changed from DATETIME to TIMESTAMP for Oracle compatibility
+                           Inventory_stock_status VARCHAR2(50),
+                           Inventory_name VARCHAR2(100),
+                           PRIMARY KEY (Inventory_id, Inventory_code),
+                           foreign key (Storage_id) references Storage(Storage_id)
+);
+
+CREATE TABLE Payment (
+                         Payment_id INT,
+                         Payment_transactionRef VARCHAR2(20),
+                         Order_id INT,
+                         Order_code VARCHAR2(20),
+                         Supplier_id INT,
+                         Supplier_ssm VARCHAR2(50),
+                         Franchise_id INT,
+                         Franchise_code VARCHAR2(20),
+                         Payment_refund_status VARCHAR2(50),
+                         Payment_date DATE,
+                         Payment_method VARCHAR2(50),
+                         Payment_total_amount DECIMAL(8,2),
+                         Payment_tax DECIMAL(8,2),
+                         Payment_status VARCHAR2(50),
+                         Payment_discount_promotion DECIMAL(8,2),
+                         Payment_refund_amount DECIMAL(8,2),
+                         PRIMARY KEY (Payment_id, Payment_transactionRef),
+                         foreign key (Order_id, Order_code) references ORDERS(Order_id, Order_code),
+                         foreign key (Supplier_id, Supplier_ssm) references SUPPLIER(Supplier_id, Supplier_ssm),
+                         foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+--CREATE EXPLOSION TABLE 2.0
+
+CREATE TABLE Franchise_Promotion (
+                                     Franchise_id INT,
+                                     Franchise_code VARCHAR2(20),
+                                     Promotion_id INT,
+                                     Promotion_refNo VARCHAR2(20),
+                                     PRIMARY KEY (Franchise_id, Franchise_code, Promotion_id, Promotion_refNo),
+                                     foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code),
+                                     foreign key (Promotion_id, Promotion_refNo) references PROMOTION(Promotion_id, Promotion_refNo)
+);
+
+commit;
+
+CREATE TABLE Customer_DeliveryPerson (
+                                         Customer_id INT,
+                                         Customer_personal_email VARCHAR(100),
+                                         DeliveryPerson_id INT,
+                                         DeliveryPerson_License VARCHAR2(30),
+                                         DeliveryPerson_number_plate VARCHAR(10),
+                                         PRIMARY KEY (Customer_id, Customer_personal_email, DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate),
+                                         foreign key (Customer_id, Customer_personal_email) references CUSTOMER(Customer_id, Customer_personal_email),
+                                         foreign key (DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate) references DELIVERY_PERSON(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate)
+);
+
+commit;
+
+CREATE TABLE Customer_Promotion (
+                                    Customer_id INT,
+                                    Customer_personal_email VARCHAR(100),
+                                    Promotion_id INT,
+                                    Promotion_refNo VARCHAR2(20),
+                                    PRIMARY KEY (Customer_id, Customer_personal_email, Promotion_id, Promotion_refNo),
+                                    foreign key (Customer_id, Customer_personal_email) references CUSTOMER(Customer_id, Customer_personal_email),
+                                    foreign key (Promotion_id, Promotion_refNo) references PROMOTION(Promotion_id, Promotion_refNo)
+);
+
+commit;
+
+CREATE TABLE DeliveryPerson_Staff (
+                                      DeliveryPerson_id INT,
+                                      DeliveryPerson_License VARCHAR2(30),
+                                      DeliveryPerson_number_plate VARCHAR(10),
+                                      Staff_id INT,
+                                      Staff_work_email VARCHAR2(100),
+                                      PRIMARY KEY (DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate, Staff_id, Staff_work_email),
+                                      foreign key (DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate) references DELIVERY_PERSON(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate),
+                                      foreign key (Staff_id, Staff_work_email) references STAFF(Staff_id, Staff_work_email)
+);
+
+commit;
+
+CREATE TABLE Staff_Reservation (
+                                   Staff_id INT,
+                                   Staff_work_email VARCHAR2(100),
+                                   Reservation_id INT,
+                                   Reservation_code VARCHAR2(20),
+                                   PRIMARY KEY (Staff_id, Staff_work_email, Reservation_id, Reservation_code),
+                                   foreign key (Staff_id, Staff_work_email) references STAFF(Staff_id, Staff_work_email),
+                                   foreign key (Reservation_id, Reservation_code) references RESERVATION(Reservation_id, Reservation_code)
+);
+
+commit;
+
+CREATE TABLE Person_Asset (
+                              Person_IC_Num VARCHAR2(20),
+                              Asset_id INT,
+                              Asset_code VARCHAR2(20),
+                              PRIMARY KEY (Person_IC_Num, Asset_id, Asset_code),
+                              foreign key (Person_IC_Num) references PERSON(Person_IC_Num),
+                              foreign key (Asset_id, Asset_code) references ASSET(Asset_id, Asset_code)
+);
+
+commit;
+
+CREATE TABLE Person_Product (
+                                Person_IC_Num VARCHAR2(20),
+                                Product_id INT,
+                                PRIMARY KEY (Person_IC_Num, Product_id),
+                                foreign key (Person_IC_Num) references PERSON(Person_IC_Num),
+                                foreign key (Product_id) references PRODUCT(Product_id)
+);
+
+commit;
+
+CREATE TABLE Person_Payment (
+                                Person_IC_Num VARCHAR2(20),
+                                Payment_id INT,
+                                Payment_transactionRef VARCHAR2(20),
+                                PRIMARY KEY (Person_IC_Num, Payment_id, Payment_transactionRef),
+                                foreign key (Person_IC_Num) references PERSON(Person_IC_Num),
+                                foreign key (Payment_id, Payment_transactionRef) references PAYMENT(Payment_id, Payment_transactionRef)
+);
+
+commit;
+
+CREATE TABLE Person_Feedback (
+                                 Person_IC_Num VARCHAR2(20),
+                                 Feedback_id INT,
+                                 Feedback_Code VARCHAR2(20),
+                                 PRIMARY KEY (Person_IC_Num, Feedback_id, Feedback_Code),
+                                 foreign key (Person_IC_Num) references PERSON(Person_IC_Num),
+                                 foreign key (Feedback_id, Feedback_Code) references FEEDBACK(Feedback_id, Feedback_Code)
+);
+
+commit;
+
+CREATE TABLE Person_Order (
+                              Person_IC_Num VARCHAR2(20),
+                              Order_id INT,
+                              Order_code VARCHAR2(20),
+                              PRIMARY KEY (Person_IC_Num, Order_id, Order_code),
+                              foreign key (Person_IC_Num) references PERSON(Person_IC_Num),
+                              foreign key (Order_id, Order_code) references ORDERS(Order_id, Order_code)
+);
+
+commit;
+
+CREATE TABLE Person_Franchise (
+                                  Person_IC_Num VARCHAR2(20),
+                                  Franchise_id INT,
+                                  Franchise_code VARCHAR2(20),
+                                  PRIMARY KEY (Person_IC_Num, Franchise_id, Franchise_code),
+                                  foreign key (Person_IC_Num) references PERSON(Person_IC_Num),
+                                  foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+commit;
+
+CREATE TABLE Employee_Supplier (
+                                   Employee_id INT,
+                                   Supplier_id INT,
+                                   Supplier_ssm VARCHAR2(50),
+                                   PRIMARY KEY (Employee_id, Supplier_id, Supplier_ssm),
+                                   foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                   foreign key (Supplier_id, Supplier_ssm) references SUPPLIER(Supplier_id, Supplier_ssm)
+);
+
+commit;
+
+CREATE TABLE Employee_Customer (
+                                   Employee_id INT,
+                                   Customer_id INT,
+                                   Customer_personal_email VARCHAR2(100),
+                                   PRIMARY KEY (Employee_id, Customer_id, Customer_personal_email),
+                                   foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                   foreign key (Customer_id, Customer_personal_email) references CUSTOMER(Customer_id, Customer_personal_email)
+);
+
+commit;
+
+CREATE TABLE Employee_AssetLog (
+                                   Employee_id INT,
+                                   AssetLog_id INT,
+                                   AssetLog_code VARCHAR2(20),
+                                   PRIMARY KEY (Employee_id, AssetLog_id, AssetLog_code),
+                                   foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                   foreign key (AssetLog_id, AssetLog_code) references ASSET_LOG(AssetLog_id, AssetLog_code)
+);
+
+commit;
+
+CREATE TABLE Employee_Attendance (
+                                     Employee_id INT,
+                                     Attendance_id INT,
+                                     Attendance_code VARCHAR2(20),
+                                     PRIMARY KEY (Employee_id, Attendance_id, Attendance_code),
+                                     foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                     foreign key (Attendance_id, Attendance_code) references ATTENDANCE(Attendance_id, Attendance_code)
+);
+
+commit;
+
+CREATE TABLE Employee_Leave (
+                                Employee_id INT,
+                                Leave_id INT,
+                                Leave_code VARCHAR2(20),
+                                PRIMARY KEY (Employee_id, Leave_id, Leave_code),
+                                foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                foreign key (Leave_id, Leave_code) references LEAVE(Leave_id, Leave_code)
+);
+
+commit;
+
+CREATE TABLE Employee_Payslip (
+                                  Employee_id INT,
+                                  Payslip_id INT,
+                                  Payslip_code VARCHAR2(20),
+                                  PRIMARY KEY (Employee_id, Payslip_id, Payslip_code),
+                                  foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                  foreign key (Payslip_id, Payslip_code) references PAYSLIP(Payslip_id, Payslip_code)
+);
+
+commit;
+
+CREATE TABLE Employee_SupplierItem (
+                                       Employee_id INT,
+                                       SupplierItem_id INT,
+                                       SupplierItem_code VARCHAR2(50),
+                                       PRIMARY KEY (Employee_id, SupplierItem_id, SupplierItem_code),
+                                       foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                       foreign key (SupplierItem_id, SupplierItem_code) references SUPPLIERITEM(SupplierItem_id, SupplierItem_code)
+);
+
+commit;
+
+CREATE TABLE Employee_Shift (
+                                Employee_id INT,
+                                Shift_id INT,
+                                Shift_code VARCHAR2(20),
+                                PRIMARY KEY (Employee_id, Shift_id, Shift_code),
+                                foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                foreign key (Shift_id, Shift_code) references SHIFT(Shift_id, Shift_code)
+);
+
+commit;
+
+CREATE TABLE Employee_Promotion (
+                                    Employee_id INT,
+                                    Promotion_id INT,
+                                    Promotion_refNo VARCHAR2(20),
+                                    PRIMARY KEY (Employee_id, Promotion_id, Promotion_refNo),
+                                    foreign key (Employee_id) references EMPLOYEE(Employee_id),
+                                    foreign key (Promotion_id, Promotion_refNo) references PROMOTION(Promotion_id, Promotion_refNo)
+);
+
+commit;
+
+CREATE TABLE Product_Franchise (
+                                   Product_id INT,
+                                   Franchise_id INT,
+                                   Franchise_code VARCHAR2(20),
+                                   PRIMARY KEY (Product_id, Franchise_id, Franchise_code),
+                                   foreign key (Product_id) references PRODUCT(Product_id),
+                                   foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+commit;
+
+CREATE TABLE Product_Promotion (
+                                   Product_id INT,
+                                   Promotion_id INT,
+                                   Promotion_refNo VARCHAR2(20),
+                                   PRIMARY KEY (Product_id, Promotion_id, Promotion_refNo),
+                                   foreign key (Product_id) references PRODUCT(Product_id),
+                                   foreign key (Promotion_id, Promotion_refNo) references PROMOTION(Promotion_id, Promotion_refNo)
+);
+
+commit;
+
+CREATE TABLE Feedback_Payment (
+                                  Feedback_id INT,
+                                  Feedback_Code VARCHAR2(20),
+                                  Payment_id INT,
+                                  Payment_transactionRef VARCHAR2(20),
+                                  PRIMARY KEY (Feedback_id, Feedback_Code, Payment_id, Payment_transactionRef),
+                                  foreign key (Feedback_id, Feedback_Code) references FEEDBACK(Feedback_id, Feedback_Code),
+                                  foreign key (Payment_id, Payment_transactionRef) references PAYMENT(Payment_id, Payment_transactionRef)
+);
+
+commit;
+
+CREATE TABLE Payment_Promotion (
+                                   Payment_id INT,
+                                   Payment_transactionRef VARCHAR2(20),
+                                   Promotion_id INT,
+                                   Promotion_refNo VARCHAR2(20),
+                                   PRIMARY KEY (Payment_id, Payment_transactionRef, Promotion_id, Promotion_refNo),
+                                   foreign key (Payment_id, Payment_transactionRef) references PAYMENT(Payment_id, Payment_transactionRef),
+                                   foreign key (Promotion_id, Promotion_refNo) references PROMOTION(Promotion_id, Promotion_refNo)
+);
+
+commit;
+
+CREATE TABLE Feedback_Promotion(
+                                   Feedback_id INT,
+                                   Feedback_Code VARCHAR2(20),
+                                   Promotion_id INT,
+                                   Promotion_refNo VARCHAR2(20),
+                                   PRIMARY KEY (Feedback_id, Feedback_Code, Promotion_id, Promotion_refNo),
+                                   foreign key (Feedback_id, Feedback_Code) references FEEDBACK (Feedback_id, Feedback_Code),
+                                   foreign key (Promotion_id, Promotion_refNo) references PROMOTION (Promotion_id, Promotion_refNo)
+);
+
+commit;
+
+CREATE TABLE Feedback_Order (
+                                Feedback_id INT,
+                                Feedback_Code VARCHAR2(20),
+                                Order_id INT,
+                                Order_code VARCHAR2(20),
+                                PRIMARY KEY (Feedback_id, Feedback_Code, Order_id, Order_code),
+                                foreign key (Feedback_id, Feedback_Code) references FEEDBACK(Feedback_id, Feedback_Code),
+                                foreign key (Order_id, Order_code) references ORDERS(Order_id, Order_code)
+);
+
+commit;
+
+CREATE TABLE Promotion_Order (
+                                 Promotion_id INT,
+                                 Promotion_refNo VARCHAR2(20),
+                                 Order_id INT,
+                                 Order_code VARCHAR2(20),
+                                 PRIMARY KEY (Promotion_id, Promotion_refNo, Order_id, Order_code),
+                                 foreign key (Promotion_id, Promotion_refNo) references PROMOTION(Promotion_id, Promotion_refNo),
+                                 foreign key (Order_id, Order_code) references ORDERS(Order_id, Order_code)
+);
+
+commit;
+
+CREATE TABLE Franchise_Supplier (
+                                    Franchise_id INT,
+                                    Franchise_code VARCHAR2(20),
+                                    Supplier_id INT,
+                                    Supplier_ssm VARCHAR2(50),
+                                    PRIMARY KEY (Franchise_id, Franchise_code, Supplier_id, Supplier_ssm),
+                                    foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code),
+                                    foreign key (Supplier_id, Supplier_ssm) references SUPPLIER(Supplier_id, Supplier_ssm)
+);
+
+commit;
+
+CREATE TABLE Franchise_SupplierItem (
+                                        Franchise_id INT,
+                                        Franchise_code VARCHAR2(20),
+                                        SupplierItem_id INT,
+                                        SupplierItem_code VARCHAR2(20),
+                                        PRIMARY KEY (Franchise_id, Franchise_code, SupplierItem_id, SupplierItem_code),
+                                        foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code),
+                                        foreign key (SupplierItem_id, SupplierItem_code) references SUPPLIERITEM(SupplierItem_id, SupplierItem_code)
+);
+
+commit;
+
+CREATE TABLE Supplier_Feedback (
+                                   Supplier_id INT,
+                                   Supplier_ssm VARCHAR2(50),
+                                   Feedback_id INT,
+                                   Feedback_Code VARCHAR2(20),
+                                   PRIMARY KEY (Supplier_id, Supplier_ssm, Feedback_id, Feedback_Code),
+                                   foreign key (Supplier_id, Supplier_ssm) references SUPPLIER(Supplier_id, Supplier_ssm),
+                                   foreign key (Feedback_id, Feedback_Code) references FEEDBACK(Feedback_id, Feedback_Code)
+);
+
+commit;
+
+CREATE TABLE AssetLog_Franchise (
+                                    AssetLog_id INT,
+                                    AssetLog_code VARCHAR2(20),
+                                    Franchise_id INT,
+                                    Franchise_code VARCHAR2(20),
+                                    PRIMARY KEY (AssetLog_id, AssetLog_code, Franchise_id, Franchise_code),
+                                    foreign key (AssetLog_id, AssetLog_code) references ASSET_LOG(AssetLog_id, AssetLog_code),
+                                    foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+commit;
+
+CREATE TABLE Owner_Staff (
+                             Owner_id INT,
+                             Owner_tax_no VARCHAR2(50),
+                             Staff_id INT,
+                             Staff_work_email VARCHAR2(100),
+                             PRIMARY KEY (Owner_id, Owner_tax_no, Staff_id, Staff_work_email),
+                             foreign key (Owner_id, Owner_tax_no) references OWNER(Owner_id, Owner_tax_no),
+                             foreign key (Staff_id, Staff_work_email) references STAFF(Staff_id, Staff_work_email)
+);
+
+commit;
+
+CREATE TABLE Payment_Product (
+                                 Payment_id INT,
+                                 Payment_transactionRef VARCHAR2(20),
+                                 Product_id INT,
+                                 PRIMARY KEY (Payment_id, Payment_transactionRef, Product_id),
+                                 foreign key (Payment_id, Payment_transactionRef) references PAYMENT(Payment_id, Payment_transactionRef),
+                                 foreign key (Product_id) references PRODUCT(Product_id)
+);
+
+commit;
+
+CREATE TABLE Feedback_Product (
+                                  Feedback_id INT,
+                                  Feedback_Code VARCHAR2(20),
+                                  Product_id INT,
+                                  PRIMARY KEY (Feedback_id, Feedback_Code, Product_id),
+                                  foreign key (Feedback_id, Feedback_Code) references FEEDBACK(Feedback_id, Feedback_Code),
+                                  foreign key (Product_id) references PRODUCT(Product_id)
+);
+
+commit;
+
+CREATE TABLE Payment_SupplierItem (
+                                      Payment_id INT,
+                                      Payment_transactionRef VARCHAR2(20),
+                                      SupplierItem_id INT,
+                                      SupplierItem_code VARCHAR2(20),
+                                      PRIMARY KEY (Payment_id, Payment_transactionRef, SupplierItem_id, SupplierItem_code),
+                                      foreign key (Payment_id, Payment_transactionRef) references PAYMENT(Payment_id, Payment_transactionRef),
+                                      foreign key (SupplierItem_id, SupplierItem_code) references SUPPLIERITEM(SupplierItem_id, SupplierItem_code)
+);
+
+commit;
+
+CREATE TABLE Order_Product (
+                               Order_id INT,
+                               Order_code VARCHAR2(20),
+                               Product_id INT,
+                               PRIMARY KEY (Order_id, Order_code, Product_id),
+                               foreign key (Order_id, Order_code) references ORDERS(Order_id, Order_code),
+                               foreign key (Product_id) references PRODUCT(Product_id)
+);
+
+commit;
+
+CREATE TABLE Order_Supplier (
+                                Order_id INT,
+                                Order_code VARCHAR2(20),
+                                Supplier_id INT,
+                                Supplier_ssm VARCHAR2(50),
+                                PRIMARY KEY (Order_id, Order_code, Supplier_id, Supplier_ssm),
+                                foreign key (Order_id, Order_code) references ORDERS(Order_id, Order_code),
+                                foreign key (Supplier_id, Supplier_ssm) references SUPPLIER(Supplier_id, Supplier_ssm)
+);
+
+commit;
+
+CREATE TABLE Payment_Asset (
+                               Payment_id INT,
+                               Payment_transactionRef VARCHAR2(20),
+                               Asset_id INT,
+                               Asset_code VARCHAR2(20),
+                               PRIMARY KEY (Payment_id, Payment_transactionRef, Asset_id, Asset_code),
+                               foreign key (Payment_id, Payment_transactionRef) references PAYMENT(Payment_id, Payment_transactionRef),
+                               foreign key (Asset_id, Asset_code) references ASSET(Asset_id, Asset_code)
+);
+
+commit;
+
+CREATE TABLE Feedback_Franchise (
+                                    Feedback_id INT,
+                                    Feedback_Code VARCHAR2(20),
+                                    Franchise_id INT,
+                                    Franchise_code VARCHAR2(20),
+                                    PRIMARY KEY (Feedback_id, Feedback_Code, Franchise_id, Franchise_code),
+                                    foreign key (Feedback_id, Feedback_Code) references FEEDBACK(Feedback_id, Feedback_Code),
+                                    foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+commit;
+
+CREATE TABLE Feedback_Reservation (
+                                      Feedback_id INT,
+                                      Feedback_Code VARCHAR2(20),
+                                      Reservation_id INT,
+                                      Reservation_code VARCHAR2(20),
+                                      PRIMARY KEY (Feedback_id, Feedback_Code, Reservation_id, Reservation_code),
+                                      foreign key (Feedback_id, Feedback_Code) references FEEDBACK(Feedback_id, Feedback_Code),
+                                      foreign key (Reservation_id, Reservation_code) references RESERVATION(Reservation_id, Reservation_code)
+);
+
+commit;
+
+CREATE TABLE Storage_Employee (
+                                  Storage_id INT,
+                                  Employee_id INT,
+                                  PRIMARY KEY (Storage_id, Employee_id),
+                                  foreign key (Storage_id) references STORAGE(Storage_id),
+                                  foreign key (Employee_id) references EMPLOYEE(Employee_id)
+);
+
+commit;
+
+CREATE TABLE Storage_Franchise (
+                                   Storage_id INT,
+                                   Franchise_id INT,
+                                   Franchise_code VARCHAR2(20),
+                                   PRIMARY KEY (Storage_id, Franchise_id, Franchise_code),
+                                   foreign key (Storage_id) references STORAGE(Storage_id),
+                                   foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+commit;
+
+CREATE TABLE SupplierItem_Feedback (
+                                       SupplierItem_id INT,
+                                       SupplierItem_code VARCHAR2(20),
+                                       Feedback_id INT,
+                                       Feedback_Code VARCHAR2(20),
+                                       PRIMARY KEY (SupplierItem_id, SupplierItem_code, Feedback_id, Feedback_Code),
+                                       foreign key (SupplierItem_id, SupplierItem_code) references SUPPLIERITEM(SupplierItem_id, SupplierItem_code),
+                                       foreign key (Feedback_id, Feedback_Code) references FEEDBACK(Feedback_id, Feedback_Code)
+);
+
+commit;
+
+CREATE TABLE Storage_SupplierItem (
+                                      Storage_id INT,
+                                      SupplierItem_id INT,
+                                      SupplierItem_code VARCHAR2(20),
+                                      PRIMARY KEY (Storage_id, SupplierItem_id, SupplierItem_code),
+                                      foreign key (Storage_id) references STORAGE(Storage_id),
+                                      foreign key (SupplierItem_id, SupplierItem_code) references SUPPLIERITEM(SupplierItem_id, SupplierItem_code)
+);
+
+commit;
+
+CREATE TABLE Product_Storage (
+                                 Product_id INT,
+                                 Storage_id INT,
+                                 PRIMARY KEY (Product_id, Storage_id),
+                                 foreign key (Product_id) references PRODUCT(Product_id),
+                                 foreign key (Storage_id) references STORAGE(Storage_id)
+);
+
+commit;

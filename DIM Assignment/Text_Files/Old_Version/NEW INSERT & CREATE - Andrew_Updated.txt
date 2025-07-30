@@ -1,0 +1,2016 @@
+--NEW INSERT & CREATE
+
+CREATE TABLE Person (
+                        Person_IC_Num VARCHAR2(20) PRIMARY KEY,
+                        Person_name varchar2(100),
+                        Person_age INT
+);
+
+CREATE TABLE Customer (
+                          Customer_id INT,
+                          Customer_personal_email VARCHAR(100),
+                          Person_IC_Num VARCHAR2(20),
+                          Customer_table_number INT,
+                          Customer_walk_in_date TIMESTAMP,
+                          Customer_walk_out_date TIMESTAMP,
+                          Customer_total_spent DECIMAL(20,2),
+                          Customer_dining_option VARCHAR2(255),
+                          Customer_time_spent VARCHAR2(20),
+                          Customer_dining_purpose VARCHAR2(255),
+                          Customer_phoneNumber  VARCHAR2(20),
+                          PRIMARY KEY (Customer_id, Customer_personal_email),
+                          foreign key (Person_IC_Num) references PERSON(Person_IC_Num)
+);
+
+CREATE TABLE Delivery_Person (
+                                 DeliveryPerson_id INT,
+                                 DeliveryPerson_License VARCHAR2(30),
+                                 DeliveryPerson_number_plate VARCHAR(10),
+                                 Person_IC_Num VARCHAR2(20),
+                                 DeliveryPerson_address VARCHAR2(100),
+                                 DeliveryPerson_method VARCHAR2(100),
+                                 DeliveryPerson_status VARCHAR(20),
+                                 DeliveryPerson_estimatedTime TIMESTAMP,
+                                 DeliveryPerson_actualTime TIMESTAMP,
+                                 DeliveryPerson_fee DECIMAL(10,2),
+                                 DeliveryPerson_Company VARCHAR2(100) NOT NULL,
+                                 PRIMARY KEY (DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate),
+                                 foreign key (Person_IC_Num) references PERSON(Person_IC_Num)
+);
+
+CREATE TABLE Employee (
+                          Employee_id INT,
+                          Person_IC_Num VARCHAR2(20),
+                          Employee_HireDate DATE,
+                          Employee_EdLevel VARCHAR2(100),
+                          PRIMARY KEY (Employee_id),
+                          foreign key (Person_IC_Num) references PERSON(Person_IC_Num)
+);
+
+CREATE TABLE Owner (
+                       Owner_id INT,
+                       Owner_tax_no VARCHAR2(50),
+                       Person_IC_Num VARCHAR(20),
+                       Employee_id INT,
+                       Owner_short_term_goal VARCHAR2(255),
+                       Owner_percentage_of_company DECIMAL(3,1),
+                       Owner_funds_deposited DECIMAL(10,2),
+                       Owner_total_investment DECIMAL(10,2),
+                       Owner_profit_ratio DECIMAL(3,1),
+                       Owner_authority_level VARCHAR2(20),
+                       Owner_management_style VARCHAR2(50),
+                       Owner_risk_tolerance VARCHAR2(20),
+                       PRIMARY KEY (Owner_id, Owner_tax_no),
+                       foreign key (Person_IC_Num) references PERSON(Person_IC_Num),
+                       foreign key (Employee_id) references EMPLOYEE (Employee_id)
+);
+
+CREATE TABLE Staff (
+                       Staff_id INT,
+                       Staff_work_email VARCHAR2(100),
+                       Employee_id INT,
+                       Person_IC_Num VARCHAR2(20),
+                       Staff_job_description VARCHAR2(255),
+                       Staff_stopwork_date DATE,
+                       Staff_penalties VARCHAR2(50),
+                       Staff_work_performance VARCHAR2(20),
+                       Staff_health_issues VARCHAR2(50),
+                       Staff_preferred_job_scope VARCHAR2(100),
+                       Staff_future_role VARCHAR2(100),
+                       Staff_position VARCHAR2(100),
+                       PRIMARY KEY (Staff_id, Staff_work_email),
+                       foreign key (Employee_id) references Employee(Employee_id),
+                       foreign key (Person_IC_Num) references Person(Person_IC_Num)
+);
+
+CREATE TABLE Storage (
+                         Storage_id INT,
+                         Storage_Barcode varchar2(100),
+                         Storage_acquisition_date DATE,
+                         PRIMARY KEY (Storage_id)
+);
+
+CREATE TABLE Franchise (
+                           Franchise_id INT,
+                           Franchise_code VARCHAR2(20),
+                           Franchise_contact_num VARCHAR2(100) NOT NULL,
+                           Franchise_address VARCHAR2(255),
+                           Franchise_postcode VARCHAR2(20),
+                           Franchise_state VARCHAR2(50),
+                           Franchise_region VARCHAR2(50),
+                           Franchise_location_type VARCHAR2(100),
+                           Franchise_operating_hour VARCHAR(20),
+                           Franchise_name VARCHAR2(100),
+                           PRIMARY KEY (Franchise_id, Franchise_code)
+);
+
+
+CREATE TABLE Reservation (
+                             Reservation_id INT,
+                             Reservation_code VARCHAR2(20),
+                             Customer_id INT,
+                             Customer_personal_email VARCHAR2(100),
+                             Franchise_id INT,
+                             Franchise_code VARCHAR2(20),
+                             Reservation_start_time TIMESTAMP,
+                             Reservation_end_time TIMESTAMP,
+                             Reservation_confirmed VARCHAR2(20),
+                             Reservation_expiration TIMESTAMP,
+                             Reservation_table_no INT,
+                             Reservation_capacity INT,
+                             Reservation_seating VARCHAR2(50),
+                             Reservation_requestDetails VARCHAR2(255),
+                             PRIMARY KEY (Reservation_id, Reservation_code),
+                             foreign key (Customer_id, Customer_personal_email) references Customer(Customer_id, Customer_personal_email),
+                             foreign key (Franchise_id, Franchise_code) references Franchise(Franchise_id, Franchise_code)
+);
+
+CREATE TABLE Orders (
+                        Order_id INT,
+                        Order_code VARCHAR2(20),
+                        Franchise_id INT,
+                        Franchise_code VARCHAR2(20),
+                        Reservation_id INT,
+                        Reservation_code VARCHAR2(20),
+                        Order_start_time VARCHAR2(10),
+                        Order_date DATE,
+                        Order_totalQuantityProduct INT,
+                        Order_end_time VARCHAR2(10),
+                        Order_add_on VARCHAR2(100),
+                        Order_remarks VARCHAR2(100),
+                        Order_table_number INT,
+                        Order_time_taken VARCHAR2(10),
+                        PRIMARY KEY (Order_id, Order_code),
+                        foreign key (Franchise_id, Franchise_code) references Franchise(Franchise_id, Franchise_code),
+                        foreign key (Reservation_id, Reservation_code) references Reservation(Reservation_id, Reservation_code)
+);
+
+CREATE TABLE Product (
+                         Product_id INT,
+                         Product_Availability VARCHAR2(20),
+                         Product_Price DECIMAL(6,2),
+                         PRIMARY KEY (Product_id)
+);
+
+CREATE TABLE Promotion (
+                           Promotion_id INT,
+                           Promotion_refNo VARCHAR2(20),
+                           Promotion_date_start DATE,
+                           Promotion_date_end DATE,
+                           Promotion_food_list VARCHAR2(255),
+                           Promotion_drink_list VARCHAR2(255),
+                           Promotion_discount VARCHAR2(100),
+                           Promotion_name VARCHAR2(100),
+                           Promotion_duration VARCHAR2(50),
+                           Promotion_reason VARCHAR2(100),
+                           PRIMARY KEY (Promotion_id, Promotion_refNo)
+);
+
+CREATE TABLE Supplier (
+                          Supplier_id INT,
+                          Supplier_ssm varchar2(50),
+                          Supplier_companyName varchar2(100),
+                          Supplier_contactName varchar2(50),
+                          Supplier_phoneNumber varchar(50),
+                          Supplier_address varchar2(100),
+                          Supplier_productType varchar2(50),
+                          Supplier_supplyFrequency varchar2(100),
+                          Supplier_paymentType varchar2(50),
+                          Supplier_email varchar2(100),
+                          PRIMARY KEY (Supplier_id, Supplier_ssm)
+);
+
+CREATE TABLE Asset (
+                       Asset_id INT,
+                       Asset_code VARCHAR2(50),
+                       Storage_id INT,
+                       Supplier_id INT,
+                       Supplier_ssm VARCHAR2(50),
+                       Asset_category varchar2(100),
+                       Asset_start_date DATE,
+                       Asset_dispose_date DATE,
+                       Asset_lifespan VARCHAR2(20),
+                       Asset_description VARCHAR2(100),
+                       Asset_picture VARCHAR2(100),
+                       Asset_last_maintenance_date DATE,
+                       Asset_next_maintenance_date DATE,
+                       PRIMARY KEY (Asset_id, Asset_code),
+                       foreign key (Storage_id) references STORAGE(Storage_id),
+                       foreign key (Supplier_id, Supplier_ssm) references SUPPLIER(Supplier_id, Supplier_ssm)
+);
+
+CREATE TABLE SupplierItem (
+                              SupplierItem_id INT,
+                              SupplierItem_code VARCHAR2(50),
+                              Supplier_id INT,
+                              Supplier_ssm VARCHAR2(50),
+                              SupplierItem_Name VARCHAR2(50),
+                              SupplierItem_category VARCHAR2(50),
+                              Qty_per_unit INT,
+                              SupplierItem_unit_price DECIMAL(8,2),
+                              Available_Stock DECIMAL(8,2),
+                              Expiration_date DATE,
+                              Last_ordered_date DATE,
+                              SupplierItem_quantity INT,
+                              PRIMARY KEY (SupplierItem_id, SupplierItem_code),
+                              foreign key (Supplier_id, Supplier_ssm) references Supplier(Supplier_id, Supplier_ssm)
+);
+
+CREATE TABLE Payslip (
+                         Payslip_id INT,
+                         Payslip_code VARCHAR(20),
+                         Payslip_scheduled_time VARCHAR2(10),
+                         Payslip_received_time VARCHAR2(10),
+                         Payslip_gross_salary DECIMAL(8,2),
+                         Payslip_deductions DECIMAL(8,2),
+                         Payslip_net_salary DECIMAL(8,2),
+                         Payslip_payment_date DATE,
+                         Payslip_account_number VARCHAR(50),
+                         Payslip_status VARCHAR(50),
+                         PRIMARY KEY (Payslip_id, Payslip_code)
+);
+
+CREATE TABLE Shift (
+                       Shift_id INT,
+                       Shift_code VARCHAR(20),
+                       Payslip_id INT,
+                       Payslip_code VARCHAR2(20),
+                       Franchise_id INT,
+                       Franchise_code VARCHAR2(20),
+                       Shift_start_time VARCHAR2(10),
+                       Shift_end_time VARCHAR2(10),
+                       Shift_role VARCHAR2(100),
+                       Shift_description VARCHAR2(255),
+                       Shift_pay_per_hour DECIMAL(8,2),
+                       Shift_start_date DATE,
+                       Shift_end_date DATE,
+                       Shift_duration_hours VARCHAR2(10),
+                       PRIMARY KEY (Shift_id, Shift_code),
+                       foreign key (Payslip_id, Payslip_code) references PAYSLIP(Payslip_id, Payslip_code),
+                       foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+CREATE TABLE Attendance (
+                            Attendance_id INT,
+                            Attendance_code VARCHAR(20),
+                            Payslip_id INT,
+                            Payslip_code VARCHAR2(20),
+                            Franchise_id INT,
+                            Franchise_code VARCHAR2(20),
+                            Attendance_date DATE,
+                            Attendance_checkInTime VARCHAR2(10),
+                            Attendance_checkOutTime VARCHAR2(10),
+                            Attendance_hours_worked NUMERIC(6,2),
+                            Attendance_status VARCHAR(50),
+                            Attendance_reason VARCHAR(255),
+                            Attendance_overtime_hours NUMERIC(6,2),
+                            Attendance_shiftType VARCHAR(50),
+                            PRIMARY KEY (Attendance_id, Attendance_code),
+                            foreign key (Payslip_id, Payslip_code) references PAYSLIP(Payslip_id, Payslip_code),
+                            foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+CREATE TABLE Leave (
+                       Leave_id INT,
+                       Leave_code VARCHAR2(20),
+                       Payslip_id INT,
+                       Payslip_code VARCHAR2(20),
+                       Franchise_id INT,
+                       Franchise_code VARCHAR2(20),
+                       Leave_start_time VARCHAR2(10),
+                       Leave_end_time VARCHAR2(10),
+                       Leave_duration_day VARCHAR2(50),
+                       Leave_reason VARCHAR2(255),
+                       Leave_left NUMERIC(8,2),
+                       Leave_end_date DATE,
+                       Leave_start_date DATE,
+                       Leave_duration_hours VARCHAR2(10),
+                       PRIMARY KEY (Leave_id, Leave_code),
+                       foreign key (Payslip_id, Payslip_code) references PAYSLIP(Payslip_id, Payslip_code),
+                       foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+CREATE TABLE Food (
+                      Food_id INT,
+                      Food_code VARCHAR2(20),
+                      Product_id INT,
+                      Food_picture VARCHAR2(50),
+                      Food_description VARCHAR(255),
+                      Food_cost DECIMAL(6,2),
+                      Food_servingSize VARCHAR2(50),
+                      Food_availabilityStatus VARCHAR2(50),
+                      Food_availabilityStock VARCHAR2(50),
+                      Food_category VARCHAR2(100),
+                      Food_cookingMethod VARCHAR(100),
+                      PRIMARY KEY (Food_id, Food_code),
+                      foreign key (Product_id) references PRODUCT(Product_id)
+);
+
+CREATE TABLE Drink (
+                       Drink_id INT,
+                       Drink_code VARCHAR(20),
+                       Product_id INT,
+                       Drink_picture VARCHAR2(50),
+                       Drink_cost DECIMAL(6,2),
+                       Drink_availabilityStock VARCHAR2(50),
+                       Drink_category VARCHAR2(100),
+                       Drink_temperature VARCHAR2(50),
+                       Drink_carbonationStatus VARCHAR2(50),
+                       Drink_availabilityStatus VARCHAR2(50),
+                       Drink_size VARCHAR2(50),
+                       PRIMARY KEY (Drink_id, Drink_code),
+                       foreign key (Product_id) references PRODUCT(Product_id)
+);
+
+CREATE TABLE Asset_Log (
+                           AssetLog_id INT,
+                           AssetLog_code VARCHAR2(20),
+                           Asset_id INT,
+                           Asset_code VARCHAR2(20),
+                           AssetLog_usage_start_time VARCHAR2(10),
+                           AssetLog_usage_end_time VARCHAR2(20),
+                           AssetLog_usage_date DATE,
+                           AssetLog_usage_duration VARCHAR2(10), -- Changed from DATETIME to TIMESTAMP for Oracle compatibility
+                           AssetLog_description VARCHAR2(255),
+                           AssetLog_remarks VARCHAR2(255),
+                           AssetLog_condition VARCHAR2(50),
+                           AssetLog_location_used VARCHAR2(100),
+                           PRIMARY KEY (AssetLog_id, AssetLog_code),
+                           foreign key (Asset_id, Asset_code) references Asset(Asset_id, Asset_code)
+);
+
+CREATE TABLE Feedback (
+                          Feedback_id INT,
+                          Feedback_Code VARCHAR2(20),
+                          Feedback_type VARCHAR2(50),
+                          Feedback_timeReceived VARCHAR2(10),
+                          Feedback_dateReceived DATE,
+                          Feedback_comments VARCHAR2(255),
+                          Feedback_response_desc VARCHAR2(255),
+                          Feedback_responseStatus VARCHAR2(50),
+                          Feedback_foodRating NUMBER(2,1),  -- Allows decimal ratings (e.g., 4.5)
+                          Feedback_serviceRating NUMBER(2,1),  -- Allows decimal ratings (e.g., 4.0)
+                          PRIMARY KEY (Feedback_id, Feedback_Code)
+);
+
+CREATE TABLE Inventory (
+                           Inventory_id INT,
+                           Inventory_code VARCHAR2(20),
+                           Storage_id INT,
+                           Inventory_quantity_in_stock INT,
+                           Inventory_unit_of_measure VARCHAR2(50),
+                           Inventory_location VARCHAR2(100),
+                           Inventory_min_stock_level INT,
+                           Inventory_max_stock_level INT,
+                           Inventory_last_updated TIMESTAMP,  -- Changed from DATETIME to TIMESTAMP for Oracle compatibility
+                           Inventory_stock_status VARCHAR2(50),
+                           Inventory_name VARCHAR2(100),
+                           PRIMARY KEY (Inventory_id, Inventory_code),
+                           foreign key (Storage_id) references Storage(Storage_id)
+);
+
+CREATE TABLE Payment (
+                         Payment_id INT,
+                         Payment_transactionRef VARCHAR2(20),
+                         Order_id INT,
+                         Order_code VARCHAR2(20),
+                         Supplier_id INT,
+                         Supplier_ssm VARCHAR2(50),
+                         Franchise_id INT,
+                         Franchise_code VARCHAR2(20),
+                         Payment_refund_status VARCHAR2(50),
+                         Payment_date DATE,
+                         Payment_method VARCHAR2(50),
+                         Payment_total_amount DECIMAL(8,2),
+                         Payment_tax DECIMAL(8,2),
+                         Payment_status VARCHAR2(50),
+                         Payment_discount_promotion DECIMAL(8,2),
+                         Payment_refund_amount DECIMAL(8,2),
+                         PRIMARY KEY (Payment_id, Payment_transactionRef),
+                         foreign key (Order_id, Order_code) references ORDERS(Order_id, Order_code),
+                         foreign key (Supplier_id, Supplier_ssm) references SUPPLIER(Supplier_id, Supplier_ssm),
+                         foreign key (Franchise_id, Franchise_code) references FRANCHISE(Franchise_id, Franchise_code)
+);
+
+
+--INSERT DATA:
+
+--FIRST PART INSERT DATA INTO SUPERCLASS:
+
+-- 1 - 10 = STAFF 11 - 20 = OWNER 21 - 30 DELIVERY PERSON 31-40 CUSTOMER
+INSERT ALL --DATA INJECTION FOR PERSON TABLE
+    INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('990101101234', 'Ahmad Zulkarnain', 25)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('980214025678', 'Siti Nurhaliza', 26)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('970325059876', 'Lee Chong Wei', 27)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('960430086543', 'Nur Aisyah Binti Rahman', 28)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('950512093210', 'Muhammad Farhan', 29)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('940623014321', 'Lim Wei Sheng', 30)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('930704078765', 'Kavitha Rajendran', 31)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('920815125674', 'Ariff Hakim', 32)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('910926119098', 'Wong Mei Ling', 33)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('900102033456', 'Hafiz Iqbal', 34)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('890213068764', 'Chong Siew Mei', 35)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('880324041256', 'Rahman Iskandar', 36)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('870405054523', 'Tan Mei Fen', 37)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('860516107890', 'Samuel Raj', 38)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('850627022345', 'Aina Sofea', 39)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('840708076789', 'Suraya Hanim', 40)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('830819129873', 'Mohd Faiz', 41)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('820930115647', 'Aishah Zainal', 42)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('811001031342', 'Anwar Hadi', 43)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('800112068901', 'Syafiq Ismail', 44)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('790223098765', 'Farid Kamarul', 45)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('780304056789', 'Nadia Rahman', 46)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('770415034567', 'Zulkifli Ahmad', 47)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('760526012345', 'Halimah Bakar', 48)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('750607078912', 'Faizal Hamid', 49)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('740718045678', 'Noraini Saad', 50)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('730829033210', 'Hakim Johari', 51)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('720930012345', 'Norliza Hassan', 52)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('711001098765', 'Ramli Zakaria', 53)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('700112087654', 'Siti Khadijah', 54)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('690223076543', 'Ahmad Haziq', 55) --CUSTOMERS
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('680304065432', 'Nor Azman', 56)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('670415054321', 'Zainab Kassim', 57)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('660526043210', 'Hassan Ramzi', 58)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('650607032109', 'Fatimah Ariff', 59)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('640718021098', 'Mohamed Salleh', 60)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('630829010987', 'Rohani Ismail', 61)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('620930099876', 'Abdul Rahim', 62)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('589175692516', 'Abu Bakar', 24)
+INTO Person (Person_IC_Num, Person_name, Person_age) VALUES ('107692769173', 'Zack', 27)
+SELECT 1 FROM DUAL; --compulsory for inserting multiple data into one table when using 1 query
+
+commit;
+
+INSERT ALL --inserting data into customer table
+    INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                    Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                    Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20001, 'Ahmad.Haziq@example.com', '690223076543', 5,
+        TO_TIMESTAMP('2025-02-12 12:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 13:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        25.50, 'Dine-in', '01:00:00', 'Business Meeting','123456789')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20002, 'Nor.Azman@example.com', '680304065432', 8,
+        TO_TIMESTAMP('2025-02-12 18:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 19:15:00', 'YYYY-MM-DD HH24:MI:SS'),
+        35.00, 'Takeaway', '01:15:00', 'Casual Dining','987654321')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20003, 'Zainab.Kassim@example.com', '670415054321', 12,
+        TO_TIMESTAMP('2025-02-12 14:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 15:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        15.75, 'Dine-in', '01:00:00', 'Family Gathering','112233445')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20004, 'Hassan.Ramzi@example.com', '660526043210', 3,
+        TO_TIMESTAMP('2025-02-12 20:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 21:45:00', 'YYYY-MM-DD HH24:MI:SS'),
+        42.90, 'Dine-in', '01:45:00', 'Anniversary Dinner','223344556')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20005, 'Fatimah.Ariff@example.com', '650607032109', 9,
+        TO_TIMESTAMP('2025-02-12 11:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 12:45:00', 'YYYY-MM-DD HH24:MI:SS'),
+        30.25, 'Dine-in', '01:15:00', 'Lunch Break','334455667')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20006, 'Mohamed.Salleh@example.com', '640718021098', 15,
+        TO_TIMESTAMP('2025-02-12 17:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 18:45:00', 'YYYY-MM-DD HH24:MI:SS'),
+        50.00, 'Takeaway', '01:15:00', 'Celebration','445566778')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20007, 'Rohani.Ismail@example.com', '630829010987', 7,
+        TO_TIMESTAMP('2025-02-12 13:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 14:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        27.60, 'Dine-in', '01:30:00', 'Work Meeting','556677889')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20008, 'Abdul.Rahim@example.com', '620930099876', 2,
+        TO_TIMESTAMP('2025-02-12 19:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 20:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        22.40, 'Takeaway', '01:00:00', 'Quick Meal','667788990')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20009, 'Abu.Bakar@example.com', '589175692516', 11,
+        TO_TIMESTAMP('2025-02-12 16:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 17:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        37.80, 'Dine-in', '01:30:00', 'Friendly Hangout','778899001')
+INTO  Customer (Customer_id, Customer_personal_email, Person_IC_Num, Customer_table_number,
+                Customer_walk_in_date, Customer_walk_out_date, Customer_total_spent,
+                Customer_dining_option, Customer_time_spent, Customer_dining_purpose, Customer_phoneNumber)
+VALUES (20010, 'Zack@example.com', '107692769173', 6,
+        TO_TIMESTAMP('2025-02-12 12:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-12 13:15:00', 'YYYY-MM-DD HH24:MI:SS'),
+        19.90, 'Takeaway', '01:15:00', 'Solo Meal','889900112')
+SELECT 1 FROM DUAL;
+
+commit;
+
+--command to check if FK is working as intended || have 10 data in CUSTOMER table, when execute this command, it has to have 10 data as well.
+SELECT p.Person_name, p.Person_IC_Num, c.Customer_id, c.Person_IC_Num, c.Customer_dining_purpose
+from Person p
+         join Customer c on c.Person_IC_Num = p.Person_IC_Num;
+
+INSERT ALL --DATA INJECTION FOR DELIVERY_PERSON
+    INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                         Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                         DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                         DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30001, 'ABC123456', 'WX1234', '790223098765',
+        '12, Elm Street, City A', 'Motorcycle', 'On Duty',
+        TO_TIMESTAMP('2025-02-24 14:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-24 14:50:00', 'YYYY-MM-DD HH24:MI:SS'), 5.50, 'GrabFood')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30002, 'XYZ987654', 'UV5678', '780304056789',
+        '45, Maple Avenue, City B', 'Car', 'Off Duty',
+        TO_TIMESTAMP('2025-02-25 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-25 10:45:00', 'YYYY-MM-DD HH24:MI:SS'), 7.00, 'GrabFood')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30003, 'LMN456789', 'GH9012', '770415034567',
+        '78, Oak Drive, City C', 'Bicycle', 'Delivering',
+        TO_TIMESTAMP('2025-02-26 09:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-26 09:25:00', 'YYYY-MM-DD HH24:MI:SS'), 4.00, 'FoodPanda')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30004, 'PQR321654', 'JK3456', '760526012345',
+        '90, Pine Road, City D', 'Motorcycle', 'Waiting Order',
+        TO_TIMESTAMP('2025-02-24 15:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-24 15:30:00', 'YYYY-MM-DD HH24:MI:SS'), 5.00, 'FoodPanda')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30005, 'DEF654321', 'MN7890', '750607078912',
+        '23, Cedar Lane, City E', 'Van', 'On Duty',
+        TO_TIMESTAMP('2025-02-25 16:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-25 16:20:00', 'YYYY-MM-DD HH24:MI:SS'), 10.00, 'FoodPanda')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30006, 'GHI789123', 'OP2345', '740718045678',
+        '56, Birch Street, City F', 'Motorcycle', 'Delivering',
+        TO_TIMESTAMP('2025-02-24 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-24 11:40:00', 'YYYY-MM-DD HH24:MI:SS'), 6.00, 'GrabFood')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30007, 'STU987321', 'QR6789', '730829033210',
+        '34, Spruce Avenue, City G', 'Car', 'Off Duty',
+        TO_TIMESTAMP('2025-02-25 13:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-25 13:50:00', 'YYYY-MM-DD HH24:MI:SS'), 7.50, 'FoodPanda')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30008, 'VWX654987', 'ST8901', '720930012345',
+        '67, Redwood Drive, City H', 'Bicycle', 'On Duty',
+        TO_TIMESTAMP('2025-02-26 08:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-26 09:00:00', 'YYYY-MM-DD HH24:MI:SS'), 3.50, 'FoodPanda')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30009, 'YZA321654', 'UV3456', '711001098765',
+        '89, Willow Road, City I', 'Motorcycle', 'Delivering',
+        TO_TIMESTAMP('2025-02-24 17:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-24 18:00:00', 'YYYY-MM-DD HH24:MI:SS'), 5.75, 'GrabFood')
+INTO Delivery_Person(DeliveryPerson_id, DeliveryPerson_License, DeliveryPerson_number_plate,
+                     Person_IC_Num, DeliveryPerson_address, DeliveryPerson_method,
+                     DeliveryPerson_status, DeliveryPerson_estimatedTime, DeliveryPerson_actualTime,
+                     DeliveryPerson_fee, DeliveryPerson_Company)
+VALUES (30010, 'BCD987456', 'WX7890', '700112087654',
+        '11, Aspen Lane, City J', 'Van', 'Waiting Order',
+        TO_TIMESTAMP('2025-02-24 12:30:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2025-02-24 13:00:00', 'YYYY-MM-DD HH24:MI:SS'), 9.50, 'FoodPanda')
+SELECT 1 FROM DUAL;
+
+--command to check if FK is working as intended || have 10 data in Delivery_Person table, when execute this command, it has to have 10 data as well.
+SELECT p.Person_name, p.Person_IC_Num, dp.Person_IC_Num
+from Person p
+         join Delivery_Person dp on dp.Person_IC_Num = p.Person_IC_Num;
+
+INSERT ALL --DATA INJECTION FOR EMPLOYEE
+    INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40001, '990101101234', TO_DATE('2018-06-15', 'YYYY-MM-DD'), 'Bachelor''s in Culinery Arts')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40002, '980214025678', TO_DATE('2019-02-10', 'YYYY-MM-DD'), 'Diploma in Business Management')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40003, '970325059876', TO_DATE('2020-08-01', 'YYYY-MM-DD'), 'Bachelor''s in Finance')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40004, '960430086543', TO_DATE('2021-11-25', 'YYYY-MM-DD'), 'High School Certificate')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40005, '950512093210', TO_DATE('2022-05-30', 'YYYY-MM-DD'), 'Bachelor''s in Accounting')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40006, '940623014321', TO_DATE('2023-03-14', 'YYYY-MM-DD'), 'Diploma in IT')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40007, '930704078765', TO_DATE('2023-07-10', 'YYYY-MM-DD'), 'SPM')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40008, '920815125674', TO_DATE('2024-01-05', 'YYYY-MM-DD'), 'Bachelor''s in Accounting')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40009, '910926119098', TO_DATE('2024-02-20', 'YYYY-MM-DD'), 'Diploma in Food & Beverage')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40010, '900102033456', TO_DATE('2024-04-05', 'YYYY-MM-DD'), 'Certificate in Pastry Arts')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40011, '890213068764', TO_DATE('2017-09-12', 'YYYY-MM-DD'), 'Bachelor''s in Hospitality')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40012, '880324041256', TO_DATE('2019-06-25', 'YYYY-MM-DD'), 'Diploma in Human Resource')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40013, '870405054523', TO_DATE('2020-10-15', 'YYYY-MM-DD'), 'Bachelor''s in Business Administration')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40014, '860516107890', TO_DATE('2021-04-30', 'YYYY-MM-DD'), 'High School Certificate')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40015, '850627022345', TO_DATE('2022-08-20', 'YYYY-MM-DD'), 'Diploma in Marketing')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40016, '840708076789', TO_DATE('2023-02-14', 'YYYY-MM-DD'), 'SPM')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40017, '830819129873', TO_DATE('2023-05-18', 'YYYY-MM-DD'), 'Diploma in Restaurant Management')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40018, '820930115647', TO_DATE('2024-03-10', 'YYYY-MM-DD'), 'Certificate in Culinary Arts')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40019, '811001031342', TO_DATE('2024-06-05', 'YYYY-MM-DD'), 'Bachelor''s in Tourism Management')
+INTO Employee (Employee_id, Person_IC_Num, Employee_HireDate, Employee_EdLevel)
+VALUES (40020, '800112068901', TO_DATE('2024-07-22', 'YYYY-MM-DD'), 'Diploma in Retail Management')
+SELECT 1 FROM DUAL;
+
+--command to check if FK and PK is working
+SELECT p.Person_name, p.Person_IC_Num, emp.Person_IC_Num, emp.Employee_id
+from Person p
+         join Employee emp on emp.Person_IC_Num = p.Person_IC_Num;
+
+INSERT ALL --DATA INJECTION FOR STAFF
+    INTO Staff
+VALUES (60001, 'ahmad.zulkarnain@blackcaravan.com', 40001, '990101101234',
+        'Head Chef', TO_DATE('2025-06-15', 'YYYY-MM-DD'), 'None', 'Excellent',
+        'None', 'Culinary Arts', 'Executive Chef', 'Chef')
+INTO Staff
+VALUES (60002, 'siti.nurhaliza@blackcaravan.com', 40002, '980214025678',
+        'Waiter', TO_DATE('2024-12-20', 'YYYY-MM-DD'), 'Late Arrival', 'Good',
+        'None', 'Customer Service', 'Restaurant Manager', 'Server')
+INTO Staff
+VALUES (60003, 'lee.chong.wei@blackcaravan.com', 40003, '970325059876',
+        'Sous Chef', TO_DATE('2026-08-30', 'YYYY-MM-DD'), 'None', 'Outstanding',
+        'None', 'Food Preparation', 'Head Chef', 'Chef')
+INTO Staff
+VALUES (60004, 'nur.aisyah.binti.rahman@blackcaravan.com', 40004, '960430086543',
+        'Hostess', TO_DATE('2025-04-10', 'YYYY-MM-DD'), 'None', 'Satisfactory',
+        'Scoliosis', 'Guest Relations', 'Floor Manager', 'Front Desk')
+INTO Staff
+VALUES (60005, 'muhammad.farhan@blackcaravan.com', 40005, '950512093210',
+        'Bartender', TO_DATE('2027-01-05', 'YYYY-MM-DD'), 'None', 'Good',
+        'None', 'Beverage Management', 'Bar Manager', 'Bartender')
+INTO Staff
+VALUES (60006, 'lim.wei.sheng@blackcaravan.com', 40006, '940623014321',
+        'Dishwasher', TO_DATE('2024-11-11', 'YYYY-MM-DD'), 'Verbal Warning', 'Excellent',
+        'None', 'Kitchen Support', 'Line Cook', 'Dishwasher')
+INTO Staff
+VALUES (60007, 'kavitha.rajendran@blackcaravan.com', 40007, '930704078765',
+        'Cashier', TO_DATE('2026-05-25', 'YYYY-MM-DD'), 'None', 'Good',
+        'None', 'POS Management', 'Shift Supervisor', 'Cashier')
+INTO Staff
+VALUES (60008, 'ariff.hakim@blackcaravan.com', 40008, '920815125674',
+        'Line Cook', TO_DATE('2025-09-14', 'YYYY-MM-DD'), 'None', 'Excellent',
+        'None', 'Culinary Arts', 'Sous Chef', 'Cook')
+INTO Staff
+VALUES (60009, 'wong.mei.ling@blackcaravan.com', 40009, '910926119098',
+        'Restaurant Manager', TO_DATE('2026-12-01', 'YYYY-MM-DD'), 'Written Warning', 'Average',
+        'None', 'Operations', 'General Manager', 'Manager')
+INTO Staff
+VALUES (60010, 'hafiz.iqbal@blackcaravan.com', 40010, '900102033456',
+        'Janitor', TO_DATE('2025-07-19', 'YYYY-MM-DD'), 'None', 'Outstanding',
+        'None', 'Sanitation', 'Cleaning Supervisor', 'Cleaner')
+SELECT 1 FROM DUAL;
+
+--command to check if FK and PK is working
+SELECT p.Person_name, p.Person_IC_Num, s.Person_IC_Num, s.Employee_id, s.Staff_work_email, s.Staff_id
+from Person p
+         join Staff s on s.Person_IC_Num = p.Person_IC_Num;
+
+INSERT ALL
+    INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+                Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+                Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+                Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES (50001, 'TX12345678', '890213068764', 40011, 'Expand online presence',
+        30.0, 50000.00, 200000.00, 15.0, 'High', 'Strategic', 'Moderate')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES (50002, 'TX98765432', '880324041256', 40012, 'Increase brand awareness',
+        20.0, 30000.00, 150000.00, 12.0, 'Medium', 'Hands-on', 'Low')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES (50003, 'TX56789012', '870405054523', 40013, 'Launch a new product',
+        25.0, 40000.00, 180000.00, 18.0, 'High', 'Visionary', 'High')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES(50004, 'TX34567890', '860516107890', 40014, 'Improve supply chain',
+       35.0, 60000.00, 220000.00, 14.0, 'Medium', 'Analytical', 'Moderate')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES(50005, 'TX67890123', '850627022345', 40015, 'Boost customer retention',
+       40.0, 80000.00, 250000.00, 20.0, 'High', 'Transformational', 'High')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES (50006, 'TX90123456', '840708076789', 40016, 'Automate operations',
+        15.0, 20000.00, 100000.00, 10.0, 'Low', 'Delegative', 'Low')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES(50007, 'TX43210987', '830819129873', 40017, 'Expand to new markets',
+       50.0, 100000.00, 300000.00, 22.0, 'High', 'Visionary', 'High')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES(50008, 'TX21098765', '820930115647', 40018, 'Reduce operational costs',
+       28.0, 45000.00, 170000.00, 16.0, 'Medium', 'Strategic', 'Moderate')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES(50009, 'TX76543210', '811001031342', 40019, 'Increase stakeholder trust',
+       22.0, 35000.00, 140000.00, 13.0, 'Low', 'Participative', 'Low')
+INTO Owner (Owner_id, Owner_tax_no, Person_IC_Num,
+            Employee_id, Owner_short_term_goal, Owner_percentage_of_company,
+            Owner_funds_deposited, Owner_total_investment, Owner_profit_ratio,
+            Owner_authority_level, Owner_management_style, Owner_risk_tolerance)
+VALUES (50010, 'TX87654321', '800112068901', 40020, 'Optimize workforce',
+        33.0, 70000.00, 210000.00, 17.0, 'High', 'Coaching', 'Moderate')
+SELECT 1 FROM DUAL;
+
+SELECT p.Person_name, p.Person_IC_Num, p.Person_age, o.Person_IC_Num, o.Employee_id, o.Owner_tax_no, o.Owner_id
+from Person p
+         join Owner o on o.Person_IC_Num = p.Person_IC_Num;
+
+INSERT ALL
+    INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110001, 'Available', 12.50)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110002, 'Available', 15.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110003, 'Unavailable', 10.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110004, 'Available', 9.50)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110005, 'Available', 13.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110006, 'Available', 8.50)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110007, 'Available', 6.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110008, 'Unavailable', 7.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110009, 'Available', 9.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110010, 'Available', 10.50)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110011, 'Available', 14.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110012, 'Available', 11.50)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110013, 'Unavailable', 9.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110014, 'Available', 16.50)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110015, 'Available', 7.80)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110016, 'Unavailable', 5.50)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110017, 'Available', 12.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110018, 'Available', 18.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110019, 'Available', 20.00)
+INTO Product (Product_id, Product_Availability, Product_Price) VALUES (110020, 'Unavailable', 8.00)
+SELECT 1 FROM DUAL;
+
+INSERT ALL
+    INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+               Food_cost, Food_servingSize, Food_availabilityStatus,
+               Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES (120001, 'F001', 110001, 'img001.jpg', 'Spicy grilled chicken with herbs',
+        12.99, '1 piece', 'Available', '50', 'Poultry', 'Grilled')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES (120002, 'F002', 110002, 'img002.jpg',
+        'Creamy tomato soup with basil', 5.49, '250ml', 'Not Available',
+        '200', 'Soup', 'Boiled')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES (120003, 'F003', 110003, 'img003.jpg',
+        'Fresh vegetable salad with vinaigrette', 7.99, '300g', 'Available',
+        '75', 'Salad', 'Raw')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES(120004, 'F004', 110004, 'img004.jpg',
+       'Beef burger with cheese and pickles', 6.99, '1 burger', 'Available',
+       '40', 'Fast Food', 'Grilled')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES(120005, 'F005', 110005, 'img005.jpg',
+       'Spaghetti with marinara sauce', 8.99, '1 plate', 'Not Available',
+       '50', 'Pasta', 'Boiled')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES(120006, 'F006', 110006, 'img006.jpg',
+       'Classic Caesar salad with dressing', 9.50, '250g', 'Not Available',
+       '40', 'Salad', 'Raw')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES(120007, 'F007', 110007, 'img007.jpg',
+       'Grilled salmon with lemon butter', 6.99, '200g', 'Available',
+       '30', 'Seafood', 'Grilled')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES(120008, 'F008', 110008, 'img008.jpg',
+       'Veggie wrap with hummus and avocado', 4.49, '1 wrap', 'Available',
+       '80', 'Vegetarian', 'Raw')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES(120009, 'F009', 110009, 'img009.jpg',
+       'Chicken curry with steamed rice', 7.49, '1 bowl', 'Available',
+       '120', 'Curry', 'Stewed')
+INTO Food (Food_id, Food_code, Product_id, Food_picture, Food_description,
+           Food_cost, Food_servingSize, Food_availabilityStatus,
+           Food_availabilityStock, Food_category, Food_cookingMethod)
+VALUES(120010, 'F010', 110010, 'img010.jpg',
+       'Fried chicken with mashed potatoes', 5.49, '2 pieces', 'Not Available',
+       '60', 'Poultry', 'Fried')
+SELECT 1 FROM DUAL;
+
+--test code
+SELECT prd.Product_id, f.Food_id, f.Food_code, f.Product_id
+from Product prd
+         join Food f on f.Product_id = prd.Product_id;
+
+
+INSERT ALL
+    INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+                Drink_availabilityStock, Drink_category, Drink_temperature,
+                Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130001, 'D001', 110011, 'Dimg001.jpg', 6.00, '20', 'Juice',
+        'Cold', 'Non-Carbonated', 'Available', '250ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130002, 'D002', 110012, 'Dimg001.jpg', 7.50, '35',
+        'Coffee', 'Hot', 'Non-Carbonated', 'Not Available', '330ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130003, 'D003', 110013, 'Dimg001.jpg', 5.00, '90',
+        'Soft Drink', 'Cold', 'Carbonated', 'Available', '250ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130004, 'D004', 110014, 'Dimg001.jpg', 7.50, '25',
+        'Soft Drink', 'Cold', 'Carbonated', 'Not Available', '330ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130005, 'D005', 110015, 'Dimg001.jpg', 4.80, '65',
+        'Soft Drink', 'Cold', 'Carbonated', 'Available', '350ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130006, 'D006', 110016, 'Dimg001.jpg', 2.50, '25',
+        'Smoothie', 'Hot', 'Non-Carbonated', 'Not Available', '250ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130007, 'D007', 110017, 'Dimg001.jpg', 6.00, '50',
+        'Soft Drink', 'Cold', 'Carbonated', 'Available', '330ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130008, 'D008', 110018, 'Dimg001.jpg', 7.10, '40',
+        'Soft Drink', 'Cold', 'Carbonated', 'Available', '250ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130009, 'D009', 110019, 'Dimg001.jpg', 8.00, '15',
+        'Tea', 'Hot', 'Non-Carbonated', 'Available', '350ml')
+INTO Drink (Drink_id, Drink_code, Product_id, Drink_picture, Drink_cost,
+            Drink_availabilityStock, Drink_category, Drink_temperature,
+            Drink_carbonationStatus, Drink_availabilityStatus, Drink_size)
+VALUES (130010, 'D010', 110020, 'Dimg001.jpg', 3.70, '30',
+        'Coffee', 'Hot', 'Non-Carbonated', 'Available', '250ml')
+SELECT 1 FROM DUAL;
+
+--test code
+SELECT prd.Product_id, d.Drink_id, d.Drink_code, d.Product_id
+from Product prd
+         join Drink d on d.Product_id = prd.Product_id;
+
+INSERT ALL --DATA INJECTION FOR STORAGE
+    INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250001, 'STO-20250001', TO_DATE('2025-01-10', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250002, 'STO-20250002', TO_DATE('2025-01-15', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250003, 'STO-20250003', TO_DATE('2024-03-05', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250004, 'STO-20250004', TO_DATE('2024-03-25', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250005, 'STO-20250005', TO_DATE('2024-04-12', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250006, 'STO-20250006', TO_DATE('2024-05-08', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250007, 'STO-20250007', TO_DATE('2024-06-20', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250008, 'STO-20250008', TO_DATE('2024-07-14', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250009, 'STO-20250009', TO_DATE('2024-08-30', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250010, 'STO-20250010', TO_DATE('2024-09-05', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250011, 'STO-20250011', TO_DATE('2023-10-18', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250012, 'STO-20250012', TO_DATE('2023-11-02', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250013, 'STO-20250013', TO_DATE('2023-12-25', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250014, 'STO-20250014', TO_DATE('2023-09-09', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250015, 'STO-20250015', TO_DATE('2023-08-14', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250016, 'STO-20250016', TO_DATE('2022-07-22', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250017, 'STO-20250017', TO_DATE('2022-06-05', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250018, 'STO-20250018', TO_DATE('2021-05-10', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250019, 'STO-20250019', TO_DATE('2021-04-15', 'YYYY-MM-DD'))
+INTO Storage (Storage_id, Storage_Barcode, Storage_acquisition_date)
+VALUES (250020, 'STO-20250020', TO_DATE('2020-03-12', 'YYYY-MM-DD'))
+SELECT 1 FROM DUAL;
+
+INSERT ALL --DATA INJECTION FOR SUPPLIER
+    INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+                   Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+                   Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190001, '202403068790 (KT0565577-D)', 'FreshFoods Ltd',
+        'John Doe', '012-3456789',
+        '123 Market St, City','Vegetables', 'Weekly', 'Bank Transfer', 'john@freshfoods.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190002, '675409873476 (KT8764487-D)', 'DairyDelights',
+        'Jane Smith', '013-9876543',
+        '45 Milk Rd, Town', 'Dairy Products', 'Bi-Weekly', 'Credit Card', 'jane@dairydelights.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190003, '124376894567 (KT2398639-D)', 'GrainSupply Co',
+        'Alex Tan', '014-2223334',
+        '78 Wheat Ave, Village', 'Grains & Flour', 'Monthly', 'Cash', 'alex@grainsupply.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190004, '091287410384 (KT8194627-D)', 'OceanCatch',
+        'Mary Lee', '015-6667778',
+        '90 Harbor St, Port', 'Seafood', 'Daily', 'Online Transfer', 'mary@oceancatch.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190005, '273916503846 (KT8104528-D)', 'MeatLovers Inc',
+        'Robert Chong', '016-8889990',
+        '110 Steak Lane, City', 'Meat Products', 'Weekly', 'Cheque', 'robert@meatlovers.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190006, '189745781423 (KT3409745-D)', 'BakersChoice',
+        'Linda Wong', '017-4445556',
+        '234 Pastry Rd, Suburb', 'Baked Goods', 'Weekly', 'Credit Card', 'linda@bakerschoice.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190007, '202034569846 (KT2780590-D)', 'SpiceWorld',
+        'Kevin Lim', '018-7778889',
+        '56 Curry St, City', 'Spices & Herbs', 'Monthly', 'Bank Transfer', 'kevin@spiceworld.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190008, '871263204928 (KT7184017-D)', 'Beverage Masters',
+        'Sophia Tan', '019-5556667',
+        '101 Juice Blvd, Town', 'Beverages', 'Bi-Weekly', 'Online Transfer', 'sophia@bevmaster.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190009, '248729475629 (KT7193846-D)', 'OrganicFarmers',
+        'Daniel Yap', '011-3334445',
+        '202 Green Rd, Village', 'Organic Products', 'Weekly', 'Cash', 'daniel@organicfarm.com')
+INTO Supplier (Supplier_id, Supplier_ssm, Supplier_companyName,
+               Supplier_contactName, Supplier_phoneNumber, Supplier_address,
+               Supplier_productType, Supplier_supplyFrequency, Supplier_paymentType, Supplier_email)
+VALUES (190010, '274910495736 (KT7105938-D)', 'FrozenDelights',
+        'Michelle Lee', '012-9990001',
+        '303 Frost St, City', 'Frozen Goods', 'Monthly', 'Credit Card', 'michelle@frozendelights.com')
+SELECT 1 FROM DUAL;
+
+INSERT ALL --DATA INJECTION FOR INVENTORY
+    INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                    Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level, Inventory_max_stock_level,
+                    Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210001, 'INV1001', 250001,
+        50, 'pcs', 'A1',
+        10, 200, TO_TIMESTAMP('2025-02-15 09:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'In Stock', 'Apple')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level,
+                Inventory_max_stock_level, Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210002, 'INV1002', 250002,
+        120, 'kg', 'B2',
+        30, 500, TO_TIMESTAMP('2025-02-16 14:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'In Stock', 'Flour')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level,
+                Inventory_max_stock_level, Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210003, 'INV1003', 250003,
+        75, 'liters', 'C3',
+        20, 150, TO_TIMESTAMP('2025-02-17 16:45:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'Low Stock', 'Milk')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level,
+                Inventory_max_stock_level, Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210004, 'INV1004', 250004,
+        30, 'pcs', 'A1',
+        5, 100, TO_TIMESTAMP('2025-02-18 11:20:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'In Stock', 'Pen')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level,
+                Inventory_max_stock_level, Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210005, 'INV1005', 250005,
+        200, 'kg', 'B3',
+        50, 500, TO_TIMESTAMP('2025-02-18 13:10:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'Out of Stock', 'Sugar')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level,
+                Inventory_max_stock_level, Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210006, 'INV1006', 250006,
+        150, 'pcs', 'A2',
+        10, 300, TO_TIMESTAMP('2025-02-14 08:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'In Stock', 'Pencil')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level,
+                Inventory_max_stock_level, Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210007, 'INV1007', 250007,
+        60, 'liters', 'C1',
+        20, 180, TO_TIMESTAMP('2025-02-13 10:25:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'In Stock', 'Juice')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level,
+                Inventory_max_stock_level, Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210008, 'INV1008', 250008,
+        70, 'pcs', 'B1',
+        25, 250, TO_TIMESTAMP('2025-02-12 12:50:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'In Stock', 'Notepad')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id, Inventory_quantity_in_stock,
+                Inventory_unit_of_measure, Inventory_location, Inventory_min_stock_level,
+                Inventory_max_stock_level, Inventory_last_updated, Inventory_stock_status, Inventory_name)
+VALUES (210009, 'INV1009', 250009,
+        80, 'kg', 'A4',
+        15, 100, TO_TIMESTAMP('2025-02-11 14:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'Low Stock', 'Rice')
+INTO Inventory (Inventory_id, Inventory_code, Storage_id,
+                Inventory_quantity_in_stock, Inventory_unit_of_measure, Inventory_location,
+                Inventory_min_stock_level, Inventory_max_stock_level, Inventory_last_updated,
+                Inventory_stock_status, Inventory_name)
+VALUES (210010, 'INV1010', 250010,
+        30, 'liters', 'C2',
+        10, 200, TO_TIMESTAMP('2025-02-10 09:15:00', 'YYYY-MM-DD HH24:MI:SS'),
+        'In Stock', 'Oil')
+SELECT 1 FROM DUAL;
+
+--test code
+SELECT s.Storage_id, a.Storage_id
+from Storage s
+         join Inventory a on a.Storage_id = s.Storage_id;
+
+
+INSERT ALL --DATA INJECTION FOR ASSET
+    INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+                Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+                Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220001, 'AST2001', 250011, 190001, '202403068790 (KT0565577-D)', 'Electronics',
+        TO_DATE('2023-05-01', 'YYYY-MM-DD'), TO_DATE('2025-07-17', 'YYYY-MM-DD'), '5 years',
+        'Laptop, 15-inch screen', 'ASTimg01.jpg',
+        TO_DATE('2025-01-20', 'YYYY-MM-DD'), TO_DATE('2025-07-20', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220002, 'AST2002', 250012, 190002, '675409873476 (KT8764487-D)', 'Furniture',
+        TO_DATE('2022-09-15', 'YYYY-MM-DD'), TO_DATE('2025-07-18', 'YYYY-MM-DD'), '10 years',
+        'Office desk, oak wood', 'ASTimg01.jpg',
+        TO_DATE('2025-02-05', 'YYYY-MM-DD'), TO_DATE('2026-02-05', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220003, 'AST2003', 250013, 190003, '124376894567 (KT2398639-D)', 'Appliances',
+        TO_DATE('2020-03-10', 'YYYY-MM-DD'), TO_DATE('2025-07-19', 'YYYY-MM-DD'), '7 years',
+        'Refrigerator, 350L', 'ASTimg01.jpg',
+        TO_DATE('2024-11-10', 'YYYY-MM-DD'), TO_DATE('2025-11-10', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220004, 'AST2004', 250014, 190004, '091287410384 (KT8194627-D)', 'Electronics',
+        TO_DATE('2021-07-20', 'YYYY-MM-DD'), TO_DATE('2025-07-20', 'YYYY-MM-DD'), '4 years',
+        'Smart TV, 55-inch', 'ASTimg01.jpg',
+        TO_DATE('2024-08-15', 'YYYY-MM-DD'), TO_DATE('2025-08-15', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220005, 'AST2005', 250015, 190005, '273916503846 (KT8104528-D)', 'Furniture',
+        TO_DATE('2020-11-01', 'YYYY-MM-DD'), TO_DATE('2025-07-21', 'YYYY-MM-DD'), '12 years',
+        'Office chair, ergonomic', 'ASTimg01.jpg',
+        TO_DATE('2024-09-01', 'YYYY-MM-DD'), TO_DATE('2025-09-01', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220006, 'AST2006', 250016, 190006, '189745781423 (KT3409745-D)', 'Electronics',
+        TO_DATE('2023-01-10', 'YYYY-MM-DD'), TO_DATE('2025-07-22', 'YYYY-MM-DD'), '6 years',
+        'Desktop computer, i7', 'ASTimg01.jpg',
+        TO_DATE('2025-02-10', 'YYYY-MM-DD'), TO_DATE('2025-08-10', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220007, 'AST2007', 250017, 190007, '202034569846 (KT2780590-D)', 'Appliances',
+        TO_DATE('2022-05-05', 'YYYY-MM-DD'), TO_DATE('2025-07-23', 'YYYY-MM-DD'), '8 years',
+        'Microwave, 20L', 'ASTimg01.jpg',
+        TO_DATE('2024-12-01', 'YYYY-MM-DD'), TO_DATE('2025-12-01', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220008, 'AST2008', 250018, 190008, '871263204928 (KT7184017-D)', 'Furniture',
+        TO_DATE('2023-08-01', 'YYYY-MM-DD'), TO_DATE('2025-07-24', 'YYYY-MM-DD'), '10 years',
+        'Filing cabinet, steel', 'ASTimg01.jpg',
+        TO_DATE('2025-02-10', 'YYYY-MM-DD'), TO_DATE('2026-02-10', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220009, 'AST2009', 250019, 190009, '248729475629 (KT7193846-D)', 'Electronics',
+        TO_DATE('2021-12-20', 'YYYY-MM-DD'), TO_DATE('2025-07-25', 'YYYY-MM-DD'), '5 years',
+        'Air conditioner, 1.5HP', 'ASTimg01.jpg',
+        TO_DATE('2024-07-15', 'YYYY-MM-DD'), TO_DATE('2025-07-15', 'YYYY-MM-DD'))
+INTO Asset (Asset_id, Asset_code, Storage_id, Supplier_id, Supplier_ssm,
+            Asset_category, Asset_start_date, Asset_dispose_date, Asset_lifespan,
+            Asset_description, Asset_picture, Asset_last_maintenance_date, Asset_next_maintenance_date)
+VALUES (220010, 'AST2010', 250020, 190010, '274910495736 (KT7105938-D)', 'Appliances',
+        TO_DATE('2020-06-15', 'YYYY-MM-DD'), TO_DATE('2025-07-26', 'YYYY-MM-DD'), '7 years',
+        'Washing machine, 10kg', 'ASTimg01.jpg',
+        TO_DATE('2024-10-01', 'YYYY-MM-DD'), TO_DATE('2025-10-01', 'YYYY-MM-DD'))
+SELECT 1 FROM DUAL;
+
+--test code
+SELECT s.Supplier_id, a.Supplier_id
+from Supplier s
+         join Asset a on a.Supplier_id = s.Supplier_id;
+
+INSERT ALL --DATA INJECTION FOR SUPPLIERITEM
+    INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                       SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                       SupplierItem_unit_price, Available_Stock, Expiration_date,
+                       Last_ordered_date, SupplierItem_quantity)
+VALUES (200001, 'SI001', 190001, '202403068790 (KT0565577-D)', 'Organic Flour', 'Baking',
+        10, 5.5, 100.00, TO_DATE('2025-06-15', 'YYYY-MM-DD'), TO_DATE('2025-02-01', 'YYYY-MM-DD'), 500)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200002, 'SI002', 190002, '675409873476 (KT8764487-D)', 'Fresh Milk', 'Dairy',
+        1, 3.2, 50.00, TO_DATE('2025-03-20', 'YYYY-MM-DD'), TO_DATE('2025-02-05', 'YYYY-MM-DD'), 200)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200003, 'SI003', 190003, '124376894567 (KT2398639-D)', 'Chicken Breast', 'Meat',
+        5, 8.75, 30.00, TO_DATE('2025-02-28', 'YYYY-MM-DD'), TO_DATE('2025-01-25', 'YYYY-MM-DD'), 150)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200004, 'SI004', 190004, '091287410384 (KT8194627-D)', 'Olive Oil', 'Condiments',
+        1, 12.5, 40.00, TO_DATE('2026-08-10', 'YYYY-MM-DD'), TO_DATE('2025-02-02', 'YYYY-MM-DD'), 100)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200005, 'SI005', 190005, '273916503846 (KT8104528-D)', 'Brown Sugar', 'Baking',
+        2, 4.25, 60.00, TO_DATE('2025-12-05', 'YYYY-MM-DD'), TO_DATE('2025-02-08', 'YYYY-MM-DD'), 300)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200006, 'SI006', 190006, '189745781423 (KT3409745-D)', 'Pasta', 'Dry Goods',
+        3, 2.8, 80.00, TO_DATE('2026-04-10', 'YYYY-MM-DD'), TO_DATE('2025-02-06', 'YYYY-MM-DD'), 400)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200007, 'SI007', 190007, '202034569846 (KT2780590-D)', 'Cheddar Cheese', 'Dairy',
+        1, 6.0, 25.00, TO_DATE('2025-05-25', 'YYYY-MM-DD'), TO_DATE('2025-01-30', 'YYYY-MM-DD'), 120)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200008, 'SI008', 190008, '871263204928 (KT7184017-D)', 'Ground Beef', 'Meat',
+        30, 9.5, 20.00, TO_DATE('2025-02-20', 'YYYY-MM-DD'), TO_DATE('2025-01-28', 'YYYY-MM-DD'), 100)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200009, 'SI009', 190009, '248729475629 (KT7193846-D)', 'Tomato Sauce', 'Condiments',
+        15, 3.75, 70.00, TO_DATE('2026-01-15', 'YYYY-MM-DD'), TO_DATE('2025-02-04', 'YYYY-MM-DD'), 150)
+INTO SupplierItem (SupplierItem_id, SupplierItem_code, Supplier_id, Supplier_ssm,
+                   SupplierItem_Name, SupplierItem_category, Qty_per_unit,
+                   SupplierItem_unit_price, Available_Stock, Expiration_date,
+                   Last_ordered_date, SupplierItem_quantity)
+VALUES (200010, 'SI010', 190010, '274910495736 (KT7105938-D)', 'Canned Tuna', 'Seafood',
+        16, 4.9, 90.00, TO_DATE('2026-06-30', 'YYYY-MM-DD'), TO_DATE('2025-02-07', 'YYYY-MM-DD'), 50)
+SELECT 1 FROM DUAL;
+
+--test code
+SELECT s.Supplier_id, a.Supplier_id
+from Supplier s
+         join SupplierItem a on a.Supplier_id = s.Supplier_id;
+
+INSERT ALL --DATA INJECTION FOR FRANCHISE
+    INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                    Franchise_address, Franchise_postcode, Franchise_state,
+                    Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240001, 'FRCH-001', '05-323 4567',
+        '123 Oak Street, Unit 1', '12345', 'California',
+        'West Coast', 'Mall', '8:00:00', 'Pizza Paradise')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240002, 'FRCH-002', '04-229 7890', '456 Maple Avenue',
+        '67890', 'New York', 'East Coast',
+        'Stand', '9:30:00', 'Pasta Express')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240003, 'FRCH-003', '07-331 1123',
+        '789 Pine Road, Suite 5', '13579', 'Texas',
+        'Central', 'Storefront', '10:15:00', 'Black Plus')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240004, 'FRCH-004', '09-744 5566',
+        '321 Birch Lane', '24680', 'Florida',
+        'Southeast', 'Food Truck', '11:00:00', 'Taco Truck')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240005, 'FRCH-005', '03-2167 8899',
+        '654 Cedar Street', '98765', 'Oregon',
+        'West Coast', 'Shopping Plaza', '12:45:00', 'Fishes Nook')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240006, 'FRCH-006', '082-570 3344',
+        '987 Oak Street, Suite 2', '12321', 'Nevada',
+        'West Coast', 'Storefront', '14:00:00', 'Burger House')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240007, 'FRCH-007', '088-765 4321',
+        '135 Elm Road', '43210', 'California',
+        'West Coast', 'Food Stall', '15:30:00', 'Chicken Chop Suey')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240008, 'FRCH-008', '09-567 8901',
+        '864 Maple Lane', '24613', 'Illinois',
+        'Midwest', 'Mall', '17:00:00', 'Steak Fumes')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240009, 'FRCH-009', '06-281 2233',
+        '321 Oak Avenue, Suite 3', '54123', 'Arizona',
+        'Southwest', 'Service Center', '18:45:00', 'Pastry Olala')
+INTO Franchise (Franchise_id, Franchise_code, Franchise_contact_num,
+                Franchise_address, Franchise_postcode, Franchise_state,
+                Franchise_region, Franchise_location_type, Franchise_operating_hour, Franchise_name)
+VALUES (240010, 'FRCH-010', '03-5544 6677',
+        '741 Pine Avenue', '76543', 'Texas',
+        'Central', 'Food Truck', '20:00:00', 'BBQ Heaven')
+SELECT 1 FROM DUAL;
+
+Commit;
+
+INSERT ALL
+    INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                      Customer_personal_email, Franchise_id, Franchise_code,
+                      Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                      Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140001, 'R001', 20001,
+        'Ahmad.Haziq@example.com', 240001, 'FRCH-001',
+        TO_TIMESTAMP('2025-02-18 21:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-18 19:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Y',
+        TO_TIMESTAMP('2025-02-18 21:30:00', 'YYYY-MM-DD HH24:MI:SS'), 5, 4, 'Window-side', 'Birthday celebration for two')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140002, 'R002', 20002,
+        'Nor.Azman@example.com', 240002, 'FRCH-002',
+        TO_TIMESTAMP('2025-02-18 22:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-18 20:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'N',
+        TO_TIMESTAMP('2025-02-18 22:30:00', 'YYYY-MM-DD HH24:MI:SS'), 8, 6, 'Indoor seating', 'Friends party')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140003, 'R003', 20003,
+        'Zainab.Kassim@example.com', 240003, 'FRCH-003',
+        TO_TIMESTAMP('2025-02-19 14:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-19 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Y',
+        TO_TIMESTAMP('2025-02-19 14:30:00', 'YYYY-MM-DD HH24:MI:SS'), 3, 4, 'Window-side', 'Lunch with client')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140004, 'R004', 20004,
+        'Hassan.Ramzi@example.com', 240004, 'FRCH-004',
+        TO_TIMESTAMP('2025-02-19 20:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-19 18:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'N',
+        TO_TIMESTAMP('2025-02-19 21:00:00', 'YYYY-MM-DD HH24:MI:SS'), 7, 8, 'Indoor seating', 'Friend gathering')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140005, 'R005', 20005,
+        'Fatimah.Ariff@example.com', 240005, 'FRCH-005',
+        TO_TIMESTAMP('2025-02-20 21:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-20 19:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'Y',
+        TO_TIMESTAMP('2025-02-20 22:00:00', 'YYYY-MM-DD HH24:MI:SS'), 2, 2, 'Outdoor seating', 'Birthday celebration for two')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140006, 'R006', 20006,
+        'Mohamed.Salleh@example.com', 240006, 'FRCH-006',
+        TO_TIMESTAMP('2025-02-20 15:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-20 13:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'N',
+        TO_TIMESTAMP('2025-02-20 15:30:00', 'YYYY-MM-DD HH24:MI:SS'), 1, 2, 'Outdoor seating', 'Birthday celebration for two')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140007, 'R007', 20007,
+        'Rohani.Ismail@example.com', 240007, 'FRCH-007',
+        TO_TIMESTAMP('2025-02-21 19:30:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-21 17:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'Y',
+        TO_TIMESTAMP('2025-02-21 20:00:00', 'YYYY-MM-DD HH24:MI:SS'), 4, 4, 'Window-side', 'Dinner with client')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140008, 'R008', 20008,
+        'Abdul.Rahim@example.com', 240008, 'FRCH-008',
+        TO_TIMESTAMP('2025-02-21 22:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-21 20:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Y',
+        TO_TIMESTAMP('2025-02-21 22:30:00', 'YYYY-MM-DD HH24:MI:SS'), 9, 6, 'Outdoor seating', 'Family dinner, outdoor')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140009, 'R009', 20009,
+        'Abu.Bakar@example.com', 240009, 'FRCH-009',
+        TO_TIMESTAMP('2025-02-22 16:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-22 14:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Y',
+        TO_TIMESTAMP('2025-02-22 16:30:00', 'YYYY-MM-DD HH24:MI:SS'), 11, 8, 'Window-side', 'Family dinner, needs high chair')
+INTO Reservation (Reservation_id, Reservation_code, Customer_id,
+                  Customer_personal_email, Franchise_id, Franchise_code,
+                  Reservation_start_time, Reservation_end_time, Reservation_confirmed,
+                  Reservation_expiration, Reservation_table_no, Reservation_capacity, Reservation_seating, Reservation_requestDetails)
+VALUES (140010, 'R010', 20010,
+        'Zack@example.com', 240010, 'FRCH-010',
+        TO_TIMESTAMP('2025-02-22 20:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-02-22 18:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'N',
+        TO_TIMESTAMP('2025-02-22 20:30:00', 'YYYY-MM-DD HH24:MI:SS'), 14, 4, 'Outdoor seating', 'Casual dinner')
+SELECT 1 FROM DUAL;
+
+--test code
+SELECT r.Customer_id, c.Customer_id, c.Person_IC_Num
+from Reservation r
+join Customer c on r.Customer_id = c.Customer_id;
+
+INSERT ALL --DATA INJECTION FOR FEEDBACK
+    INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+                   Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+                   Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160001, 'FB001', 'Cold Food',
+        '12:30:00', TO_DATE('2025-02-18', 'YYYY-MM-DD'), 'Food was cold when delivered.',
+        'Apologized, refund issued', 'Resolved', 2.0, 4.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160002, 'FB002', 'Late Delivery',
+        '14:15:00', TO_DATE('2025-02-18', 'YYYY-MM-DD'), 'Order arrived 30 minutes late.',
+        'Apologized, offered discount', 'Resolved', 3.0, 3.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160003, 'FB003', 'Wrong Order',
+        '09:45:00', TO_DATE('2025-02-17', 'YYYY-MM-DD'), 'Received a different dish than ordered.',
+        'Order replaced', 'Resolved', 3.0, 4.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160004, 'FB004', 'Small Portions',
+        '20:10:00', TO_DATE('2025-02-16', 'YYYY-MM-DD'), 'Portion sizes were too small.',
+        'Feedback noted', 'Pending', 2.0, 3.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160005, 'FB005', 'Rude Staff',
+        '18:00:00', TO_DATE('2025-02-15', 'YYYY-MM-DD'), 'Waiter was rude and unhelpful.',
+        'Staff reminded of conduct', 'Resolved', 3.0, 2.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160006, 'FB006', 'Overcooked Food',
+        '10:25:00', TO_DATE('2025-02-15', 'YYYY-MM-DD'), 'Steak was overcooked and dry.',
+        'Apologized, offered replacement', 'Resolved', 2.0, 3.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160007, 'FB007', 'Undercooked Food',
+        '21:00:00', TO_DATE('2025-02-14', 'YYYY-MM-DD'), 'Chicken was not fully cooked.',
+        'Immediate refund issued', 'Resolved', 1.0, 3.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160008, 'FB008', 'Unhygienic Conditions',
+        '13:45:00', TO_DATE('2025-02-14', 'YYYY-MM-DD'), 'Table was dirty and unclean.',
+        'Extra cleaning measures taken', 'Resolved', 3.0, 2.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160009, 'FB009', 'Missing Items',
+        '16:30:00', TO_DATE('2025-02-13', 'YYYY-MM-DD'), 'Ordered fries but they were missing.',
+        'Compensation given', 'Resolved', 3.0, 4.0)
+INTO Feedback (Feedback_id, Feedback_Code, Feedback_type,
+               Feedback_timeReceived, Feedback_dateReceived, Feedback_comments,
+               Feedback_response_desc, Feedback_responseStatus, Feedback_foodRating, Feedback_serviceRating)
+VALUES (160010, 'FB010', 'Expensive Pricing',
+        '19:20:00', TO_DATE('2025-02-12', 'YYYY-MM-DD'), 'The prices are too high for portions.',
+        'No immediate action taken', 'Pending', 3.0, 3.0)
+SELECT 1 FROM DUAL;
+
+INSERT ALL --DATA INJECTION FOR PROMOTION
+    INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                    Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                    Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150001, 'PRO001',
+        TO_DATE('2025-02-18', 'YYYY-MM-DD'), TO_DATE('2025-02-28', 'YYYY-MM-DD'),
+        'Pizza, Burger', 'Cola, Water', '10% off',
+        'February Feast', '11 days', 'Winter promotion for food lovers')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150002, 'PRO002',
+        TO_DATE('2025-02-20', 'YYYY-MM-DD'), TO_DATE('2025-02-25', 'YYYY-MM-DD'),
+        'Pasta, Salad', 'Juice, Coffee', '15% off',
+        'Lunch Break Special', '6 days', 'Midday lunch offer')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150003, 'PRO003',
+        TO_DATE('2025-02-22', 'YYYY-MM-DD'), TO_DATE('2025-03-01', 'YYYY-MM-DD'),
+        'Burger, Fries', 'Soda, Lemonade', '20% off',
+        'Weekend Combo', '8 days', 'Weekend special for combos')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150004, 'PRO004',
+        TO_DATE('2025-02-23', 'YYYY-MM-DD'), TO_DATE('2025-02-28', 'YYYY-MM-DD'),
+        'Soup, Sandwich', 'Tea, Coffee', 'Buy 1 Get 1 Free',
+        'Soup & Sandwich Duo', '6 days', 'Buy one, get one offer on soups')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150005, 'PRO005',
+        TO_DATE('2025-02-25', 'YYYY-MM-DD'), TO_DATE('2025-03-05', 'YYYY-MM-DD'),
+        'Pizza, Pasta', 'Wine, Water', '25% off',
+        'Italian Feast', '10 days', 'Celebrate Italian cuisine')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150006, 'PRO006',
+        TO_DATE('2025-02-27', 'YYYY-MM-DD'), TO_DATE('2025-03-07', 'YYYY-MM-DD'),
+        'Salad, Wrap', 'Smoothie, Cola', '10% off',
+        'Healthy Choice', '10 days', 'Healthy eating promotion')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150007, 'PRO007',
+        TO_DATE('2025-03-01', 'YYYY-MM-DD'), TO_DATE('2025-03-15', 'YYYY-MM-DD'),
+        'Burger, Fries', 'Milkshake, Cola', '15% off',
+        'Fast Food Frenzy', '15 days', 'Fast food promotion for burger lovers')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150008, 'PRO008',
+        TO_DATE('2025-03-05', 'YYYY-MM-DD'), TO_DATE('2025-03-10', 'YYYY-MM-DD'),
+        'Sandwich, Salad', 'Iced Tea, Juice', '10% off',
+        'Light Meal Offer', '5 days', 'Light meal offer for health-conscious')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150009, 'PRO009',
+        TO_DATE('2025-03-10', 'YYYY-MM-DD'), TO_DATE('2025-03-20', 'YYYY-MM-DD'),
+        'Pasta, Pizza', 'Beer, Cola', '20% off',
+        'Pasta Party', '10 days', 'Party combo for pasta lovers')
+INTO Promotion (Promotion_id, Promotion_refNo, Promotion_date_start,
+                Promotion_date_end, Promotion_food_list, Promotion_drink_list,
+                Promotion_discount, Promotion_name, Promotion_duration, Promotion_reason)
+VALUES (150010, 'PRO010',
+        TO_DATE('2025-03-15', 'YYYY-MM-DD'), TO_DATE('2025-03-25', 'YYYY-MM-DD'),
+        'Wrap, Soup', 'Water, Coffee', '30% off',
+        'Spring Special', '10 days', 'Spring seasonal menu promotion')
+SELECT 1 FROM DUAL;
+
+commit;
+
+INSERT ALL --DATA INJECTION FOR ORDERS
+    INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+                 Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180001, 'O001', 240001, 'FRCH-001', 140001,
+        'R001', '12:30:00', TO_DATE('2025-02-18', 'YYYY-MM-DD'),
+        3, '12:50:00', 'Extra Cheese', 'No onions', 5, '0:20:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180002, 'O002', 240002, 'FRCH-002', 140002,
+        'R002', '13:00:00', TO_DATE('2025-02-18', 'YYYY-MM-DD'),
+        2, '13:25:00', 'Extra Sauce', 'Spicy Level 3', 8, '0:25:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180003, 'O003', 240003, 'FRCH-003', 140003,
+        'R003', '18:45:00', TO_DATE('2025-02-18', 'YYYY-MM-DD'),
+        5, '19:10:00', 'Large Fries', 'No Ice in Drink', 2, '0:25:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180004, 'O004', 240004, 'FRCH-004', 140004,
+        'R004', '20:15:00', TO_DATE('2025-02-18', 'YYYY-MM-DD'),
+        4, '20:40:00', 'Extra Bacon', 'Well-done steak', 12, '0:25:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180005, 'O005', 240005, 'FRCH-005', 140005,
+        'R005', '10:05:00', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        1, '10:20:00', 'None', 'Gluten-Free Bun', 3, '0:15:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180006, 'O006', 240006, 'FRCH-006', 140006,
+        'R006', '14:30:00', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        6, '15:00:00', 'Large Drink', 'Extra Crispy Fries', 9, '0:30:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180007, 'O007', 240007, 'FRCH-007', 140007,
+        'R007', '16:00:00', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        2, '16:20:00', 'Extra Dressing', 'Less Salt', 7, '0:20:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180008, 'O008', 240008, 'FRCH-008', 140008,
+        'R008', '11:45:00', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        3, '12:10:00', 'Cheese Dip', 'No Tomatoes', 4, '0:25:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180009, 'O009', 240009, 'FRCH-009', 140009,
+        'R009', '17:30:00', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        4, '17:55:00', 'Extra Toppings', 'Half portion rice', 11, '0:25:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180010, 'O010', 240010, 'FRCH-010', 140010,
+        'R010', '19:10:00', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        5, '19:40:00', 'None', 'Less Spicy', 6, '0:30:00')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180011, 'O011', 240001, 'FRCH-001', NULL,
+        '-', '-', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        5, '-', 'None', 'Make sure chicken is fresh', NULL, '-')
+INTO Orders (Order_id, Order_code, Franchise_id, Franchise_code, Reservation_id, Reservation_code,
+             Order_start_time, Order_date, Order_totalQuantityProduct, Order_end_time, Order_add_on, Order_remarks, Order_table_number, Order_time_taken)
+VALUES (180012, 'O012', 240002, 'FRCH-002', NULL,
+        '-', '-', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        5, '-', 'None', 'Make sure quantity correct', NULL, '-')
+SELECT 1 FROM DUAL;
+
+commit;
+
+--test code
+SELECT o.Franchise_id, f.Franchise_id
+from Franchise f
+         join Orders o ON o.Franchise_id = f.Franchise_id;
+
+SELECT o.Franchise_id, r.Franchise_id
+from Reservation r
+         join Orders o ON o.Franchise_id = r.Franchise_id;
+
+INSERT ALL
+    INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+                  Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+                  Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170001, 'TXN001', 'Not Refunded', TO_DATE('2025-02-10', 'YYYY-MM-DD'),
+        'Credit Card', 120.50, 5.50, 'Completed', 10.00,
+        0.0, 180001, 'O001', NULL, '-', 240001, 'FRCH-001')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170002, 'TXN002', 'Refunded', TO_DATE('2025-02-11', 'YYYY-MM-DD'),
+        'PayPal', 85.75, 3.75, 'Refunded', 5.00,
+        85.8, 180002, 'O002', NULL, '-', 240002, 'FRCH-002')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170003, 'TXN003', 'Not Refunded', TO_DATE('2025-02-12', 'YYYY-MM-DD'),
+        'Debit Card', 200.00, 10.00, 'Completed', 15.00,
+        0.0, 180003, 'O003', NULL, '-', 240003, 'FRCH-003')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170004, 'TXN004', 'Not Refunded', TO_DATE('2025-02-12', 'YYYY-MM-DD'),
+        'Cash', 50.00, 2.50, 'Pending', 0.00,
+        0.0, 180004, 'O004', NULL, '-', 240004, 'FRCH-004')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170005, 'TXN005', 'Refunded', TO_DATE('2025-02-13', 'YYYY-MM-DD'),
+        'Google Pay', 175.20, 8.20, 'Refunded', 20.00,
+        175.2, 180005, 'O005', NULL, '-', 240005, 'FRCH-005')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170006, 'TXN006', 'Not Refunded', TO_DATE('2025-02-14', 'YYYY-MM-DD'),
+        'Apple Pay', 95.30, 4.80, 'Completed', 10.00,
+        0.0, 180006, 'O006', NULL, '-', 240006, 'FRCH-006')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170007, 'TXN007', 'Not Refunded', TO_DATE('2025-02-14', 'YYYY-MM-DD'),
+        'Credit Card', 300.00, 15.00, 'Completed', 25.00,
+        0.0, 180007, 'O007', NULL, '-', 240007, 'FRCH-007')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170008, 'TXN008', 'Refunded', TO_DATE('2025-02-15', 'YYYY-MM-DD'),
+        'PayPal', 125.40, 6.00, 'Refunded', 10.00,
+        125.4, 180008, 'O008', NULL, '-', 240008, 'FRCH-008')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170009, 'TXN009', 'Not Refunded', TO_DATE('2025-02-16', 'YYYY-MM-DD'),
+        'Cash', 60.00, 3.00, 'Pending', 5.00,
+        0.0, 180009, 'O009', NULL, '-', 240009, 'FRCH-009')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170010, 'TXN010', 'Not Refunded', TO_DATE('2025-02-17', 'YYYY-MM-DD'),
+        'Bank Transfer', 220.75, 11.50, 'Completed', 18.00,
+        0.0, 180010, 'O010', NULL, '-', 240010, 'FRCH-010')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170011, 'TXN011', 'Not Refunded', TO_DATE('2025-02-17', 'YYYY-MM-DD'),
+        'Bank Transfer', 5500, 250, 'Completed', 20.00,
+        0.0, 180011, 'O011', 190010, '274910495736 (KT7105938-D)', 240001, 'FRCH-001')
+INTO Payment (Payment_id, Payment_transactionRef, Payment_refund_status,
+              Payment_date, Payment_method, Payment_total_amount, Payment_tax, Payment_status,
+              Payment_discount_promotion, Payment_refund_amount, Order_id, Order_code, Supplier_id, Supplier_ssm, Franchise_id, Franchise_code)
+VALUES (170012, 'TXN012', 'Not Refunded', TO_DATE('2025-02-17', 'YYYY-MM-DD'),
+        'Bank Transfer', 3800, 150, 'Completed', 25.00,
+        0.0, 180012, 'O012', 190010, '274910495736 (KT7105938-D)', 240002, 'FRCH-002')
+SELECT 1 FROM DUAL;
+
+INSERT ALL
+    INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+                  Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+                  Payslip_account_number, Payslip_status)
+VALUES (100001, 'P001', '9:00:00', '10:30:00', 3000, 200, 2800, TO_DATE('2025-03-10', 'YYYY-MM-DD'),
+        '1234567890', 'Paid')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100002, 'P002', '9:00:00', '11:00:00', 3200, 250, 2950, TO_DATE('2025-03-11', 'YYYY-MM-DD'),
+        '987654321', 'Paid')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100003, 'P003', '9:00:00', NULL, 2800, 180, 2620, TO_DATE('2025-03-12', 'YYYY-MM-DD'),
+        '1122334455', 'Pending')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100004, 'P004', '9:00:00', '12:00:00', 3500, 300, 3200, TO_DATE('2025-03-13', 'YYYY-MM-DD'),
+        '5566778899', 'Paid')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100005, 'P005', '9:00:00', '10:45:00', 4000, 500, 3500, TO_DATE('2025-03-14', 'YYYY-MM-DD'),
+        '2233445566', 'Paid')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100006, 'P006', '9:00:00', NULL, 3100, 200, 2900, TO_DATE('2025-03-15', 'YYYY-MM-DD'),
+        '3344556677', 'Pending')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100007, 'P007', '9:00:00', '11:30:00', 3300, 220, 3080, TO_DATE('2025-03-16', 'YYYY-MM-DD'),
+        '7788990011', 'Paid')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100008, 'P008', '9:00:00', '10:15:00', 3600, 280, 3320, TO_DATE('2025-03-17', 'YYYY-MM-DD'),
+        '9900112233', 'Paid')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100009, 'P009', '9:00:00', NULL, 2900, 150, 2750, TO_DATE('2025-03-18', 'YYYY-MM-DD'),
+        '5566778899', 'Pending')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100010, 'P010', '9:00:00', '12:45:00', 3100, 190, 2910, TO_DATE('2025-03-19', 'YYYY-MM-DD'),
+        '1122334455', 'Paid')
+--simulate owner payslip
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100011, 'P011', '9:00:00', '12:45:00', 12000, 0, 12000, TO_DATE('2025-03-19', 'YYYY-MM-DD'),
+        '3950671856', 'Paid')
+INTO Payslip (Payslip_id, Payslip_code, Payslip_scheduled_time, Payslip_received_time,
+              Payslip_gross_salary, Payslip_deductions, Payslip_net_salary, Payslip_payment_date,
+              Payslip_account_number, Payslip_status)
+VALUES (100012, 'P012', '9:00:00', '12:45:00', 20000, 0, 20000, TO_DATE('2025-03-19', 'YYYY-MM-DD'),
+        '2960285710', 'Paid')
+SELECT 1 FROM DUAL;
+
+commit;
+
+INSERT ALL
+    INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                     Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                     Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                     Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90001, 'A001', TO_DATE('2025-03-10', 'YYYY-MM-DD'), '8:00:00', '17:00:00', 9, 'Present',
+        '-', 1, 'Morning Shift', 240001, 'FRCH-001', 100001, 'P001')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90002, 'A002', TO_DATE('2025-03-11', 'YYYY-MM-DD'), '7:30:00', '16:30:00', 9, 'Present',
+        '-', 1, 'Morning Shift', 240002, 'FRCH-002', 100002, 'P002')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90003, 'A003', TO_DATE('2025-03-12', 'YYYY-MM-DD'), '8:15:00', '12:30:00', 4.25, 'Half-day',
+        'Personal Reason', 0, 'Morning Shift', 240003, 'FRCH-003', 100003, 'P003')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90004, 'A004', TO_DATE('2025-03-13', 'YYYY-MM-DD'), NULL, NULL, 0, 'Absent',
+        'Sick Leave', 0, NULL, 240004, 'FRCH-004', 100004, 'P004')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90005, 'A005', TO_DATE('2025-03-14', 'YYYY-MM-DD'), '9:00:00', '18:00:00', 9, 'Present',
+        '-', 0, 'Evening Shift', 240005, 'FRCH-005', 100005, 'P005')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90006, 'A006', TO_DATE('2025-03-15', 'YYYY-MM-DD'), '6:45:00', '14:45:00', 8, 'Present',
+        '-', 0, 'Morning Shift', 240006, 'FRCH-006', 100006, 'P006')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90007, 'A007', TO_DATE('2025-03-16', 'YYYY-MM-DD'), '10:00:00', '20:00:00', 10, 'Present',
+        '-', 2, 'Night Shift', 240007, 'FRCH-007', 100007, 'P007')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90008, 'A008', TO_DATE('2025-03-17', 'YYYY-MM-DD'), '7:00:00', '16:30:00', 9.5, 'Present',
+        '-', 1.5, 'Morning Shift', 240008, 'FRCH-008', 100008, 'P008')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90009, 'A009', TO_DATE('2025-03-18', 'YYYY-MM-DD'), '12:00:00', '22:00:00', 10, 'Present',
+        '-', 2, 'Night Shift', 240009, 'FRCH-009', 100009, 'P009')
+INTO Attendance (Attendance_id, Attendance_code, Attendance_date, Attendance_checkInTime,
+                 Attendance_checkOutTime, Attendance_hours_worked, Attendance_status,
+                 Attendance_reason, Attendance_overtime_hours, Attendance_shiftType,
+                 Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (90010, 'A010', TO_DATE('2025-03-19', 'YYYY-MM-DD'), '8:30:00', '17:30:00', 9, 'Present',
+        '-', 1, 'Evening Shift', 240010, 'FRCH-010', 100010, 'P010')
+SELECT 1 FROM DUAL;
+
+INSERT ALL
+    INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+                Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+                Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80001, 'L001', '8:00:00', '12:00:00', '0', 'Medical Leave', 5, TO_DATE('2025-03-10', 'YYYY-MM-DD'),
+        TO_DATE('2025-03-10', 'YYYY-MM-DD'), '4:00:00', 240001, 'FRCH-001', 100001, 'P001')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80002, 'L002', '9:00:00', '17:00:00', '0', 'Personal Leave', 3, TO_DATE('2025-04-05', 'YYYY-MM-DD'),
+        TO_DATE('2025-04-05', 'YYYY-MM-DD'), '8:00:00', 240002, 'FRCH-002', 100002, 'P002')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80003, 'L003', '0:00:00', '0:00:00', '5', 'Vacation', 10, TO_DATE('2025-06-15', 'YYYY-MM-DD'),
+        TO_DATE('2025-06-20', 'YYYY-MM-DD'), '40', 240003, 'FRCH-003', 100003, 'P003')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80004, 'L004', '13:00:00', '16:00:00', '0', 'Family Emergency', 2, TO_DATE('2025-03-22', 'YYYY-MM-DD'),
+        TO_DATE('2025-03-22', 'YYYY-MM-DD'), '3:00:00', 240004, 'FRCH-004', 100004, 'P004')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80005, 'L005', '10:00:00', '15:00:00', '0', 'Child Care Leave', 4, TO_DATE('2025-05-10', 'YYYY-MM-DD'),
+        TO_DATE('2025-05-10', 'YYYY-MM-DD'), '5:00:00', 240005, 'FRCH-005', 100005, 'P005')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80006, 'L006', '14:00:00', '18:00:00', '0', 'Mental Health', 6, TO_DATE('2025-05-25', 'YYYY-MM-DD'),
+        TO_DATE('2025-05-25', 'YYYY-MM-DD'), '4:00:00', 240006, 'FRCH-006', 100006, 'P006')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80007, 'L007', '8:00:00', '12:00:00', '0', 'Work-related Injury', 3, TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        TO_DATE('2025-06-30', 'YYYY-MM-DD'), '4:00:00', 240007, 'FRCH-007', 100007, 'P007')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80008, 'L008', '7:00:00', '15:00:00', '0', 'Religious Leave', 5, TO_DATE('2025-07-10', 'YYYY-MM-DD'),
+        TO_DATE('2025-07-10', 'YYYY-MM-DD'), '8:00:00', 240008, 'FRCH-008', 100008, 'P008')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80009, 'L009', '9:00:00', '12:00:00', '0', 'Study Leave', 4, TO_DATE('2025-08-15', 'YYYY-MM-DD'),
+        TO_DATE('2025-08-15', 'YYYY-MM-DD'), '3:00:00', 240009, 'FRCH-009', 100009, 'P009')
+INTO Leave (Leave_id, Leave_code, Leave_start_time, Leave_end_time, Leave_duration_day,
+            Leave_reason, Leave_left, Leave_end_date, Leave_start_date, Leave_duration_hours,
+            Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (80010, 'L010', '0:00:00', '0:00:00', '31', 'Maternity Leave', 60, TO_DATE('2025-09-01', 'YYYY-MM-DD'),
+        TO_DATE('2025-10-31', 'YYYY-MM-DD'), '248', 240010, 'FRCH-010', 100010, 'P010')
+SELECT 1 FROM DUAL;
+
+INSERT ALL
+    INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+                Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+                Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70001, 'MORN001', '7:00:00', '15:00:00', 'Chef', 'Morning kitchen shift', 15,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240001, 'FRCH-001', 100001, 'P001')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70002, 'EVEN002', '15:00:00', '23:00:00', 'Chef', 'Evening kitchen shift', 16,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240002, 'FRCH-002', 100002, 'P002')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70003, 'MORN003', '7:00:00', '15:00:00', 'Waiter', 'Serving customers', 10,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240003, 'FRCH-003', 100003, 'P003')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70004, 'EVEN004', '15:00:00', '23:00:00', 'Waiter', 'Nighttime customer service', 11,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240004, 'FRCH-004', 100004, 'P004')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70005, 'MORN005', '8:00:00', '16:00:00', 'Bartender', 'Preparing drinks', 14,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240005, 'FRCH-005', 100005, 'P005')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70006, 'EVEN006', '16:00:00', '0:00:00', 'Bartender', 'Nighttime bar service', 15,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240006, 'FRCH-006', 100006, 'P006')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70007, 'MORN007', '6:00:00', '14:00:00', 'Cleaner', 'Cleaning and maintenance', 9.5,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240007, 'FRCH-007', 100007, 'P007')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70008, 'EVEN008', '14:00:00', '22:00:00', 'Cleaner', 'Evening cleaning duties', 9.5,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240008, 'FRCH-008', 100008, 'P008')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70009, 'NIGHT009', '22:00:00', '6:00:00', 'Security Guard', 'Night security shift', 12,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240009, 'FRCH-009', 100009, 'P009')
+INTO Shift (Shift_id, Shift_code, Shift_start_time, Shift_end_time, Shift_role,
+            Shift_description, Shift_pay_per_hour, Shift_start_date, Shift_end_date,
+            Shift_duration_hours, Franchise_id, Franchise_code, Payslip_id, Payslip_code)
+VALUES (70010, 'FLEX010', '10:00:00', '18:00:00', 'Cashier', 'Handling payments', 11.5,
+        TO_DATE('2025-02-01', 'YYYY-MM-DD'), TO_DATE('2025-06-30', 'YYYY-MM-DD'),
+        '8:00:00', 240010, 'FRCH-010', 100010, 'P010')
+SELECT 1 FROM DUAL;
+
+INSERT ALL
+    INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                    AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                    AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                    Asset_id, Asset_code)
+VALUES (230001, 'AL1001', '9:00:00', '11:00:00', TO_DATE('2025-02-10', 'YYYY-MM-DD'),
+        '2 hours', 'Used laptop for meeting', 'Laptop in good condition', 'Good',
+        'Conference Room A', 220001, 'AST2001')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230002, 'AL1002', '14:30:00', '16:30:00', TO_DATE('2025-02-11', 'YYYY-MM-DD'),
+        '2 hours', 'Used projector for presentation', 'Projector in excellent condition', 'Excellent',
+        'Meeting Room 1', 220002, 'AST2002')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230003, 'AL1003', '8:00:00', '10:30:00', TO_DATE('2025-02-12', 'YYYY-MM-DD'),
+        '2.5 hours', 'Used for employee training', 'Equipment functioning well', 'Fair',
+        'Training Room B', 220003, 'AST2003')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230004, 'AL1004', '13:00:00', '14:30:00', TO_DATE('2025-02-13', 'YYYY-MM-DD'),
+        '1.5 hours', 'Used office printer for prints', 'Printer was functioning well', 'Good',
+        'Office 3', 220004, 'AST2004')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230005, 'AL1005', '10:00:00', '12:00:00', TO_DATE('2025-02-14', 'YYYY-MM-DD'),
+        '2 hours', 'Used laptop for client meeting', 'Laptop was in good condition', 'Excellent',
+        'Client Meeting Room', 220005, 'AST2005')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230006, 'AL1006', '9:30:00', '11:00:00', TO_DATE('2025-02-15', 'YYYY-MM-DD'),
+        '1.5 hours', 'Used whiteboard for brainstorming', 'Whiteboard had some marks', 'Good',
+        'Innovation Room', 220006, 'AST2006')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230007, 'AL1007', '7:45:00', '9:15:00', TO_DATE('2025-02-16', 'YYYY-MM-DD'),
+        '1.5 hours', 'Used scanner for document checks', 'Scanner working fine', 'Fair',
+        'Storage Area A', 220007, 'AST2007')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230008, 'AL1008', '11:00:00', '13:30:00', TO_DATE('2025-02-17', 'YYYY-MM-DD'),
+        '2.5 hours', 'Used projector for conference', 'Projector in good condition', 'Good',
+        'Auditorium 2', 220008, 'AST2008')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230009, 'AL1009', '15:00:00', '17:00:00', TO_DATE('2025-02-18', 'YYYY-MM-DD'),
+        '2 hours', 'Used laptop for training session', 'Laptop was in good condition', 'Excellent',
+        'Conference Room B', 220009, 'AST2009')
+INTO Asset_Log (AssetLog_id, AssetLog_code, AssetLog_usage_start_time, AssetLog_usage_end_time,
+                AssetLog_usage_date, AssetLog_usage_duration, AssetLog_description,
+                AssetLog_remarks, AssetLog_condition, AssetLog_location_used,
+                Asset_id, Asset_code)
+VALUES (230010, 'AL1010', '8:30:00', '10:00:00', TO_DATE('2025-02-19', 'YYYY-MM-DD'),
+        '1.5 hours', 'Used camera for product demo', 'Camera functioning well', 'Good',
+        'Office 4', 220010, 'AST2010')
+SELECT 1 FROM DUAL;
+
+commit;

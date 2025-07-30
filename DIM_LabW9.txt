@@ -1,0 +1,60 @@
+--Create Books Table
+CREATE TABLE Books (
+	BookID NUMBER PRIMARY KEY,
+	Title VARCHAR2(100),
+	AuthorID NUMBER
+);
+
+--Create Author Table
+CREATE TABLE Authors (
+	AuthorID NUMBER PRIMARY KEY,
+	AuthorName VARCHAR2(100)
+);
+
+
+--Insert Books
+INSERT INTO Books (BookID, Title, AuthorID) VALUES (1, 'The Great Gatsby', 101);
+INSERT INTO Books (BookID, Title, AuthorID) VALUES (2, 'To Kill a Mockingbird', 102);
+INSERT INTO Books (BookID, Title, AuthorID) VALUES (3, '1984', NULL); --Unknown Author
+INSERT INTO Books (BookID, Title, AuthorID) VALUES (4, 'Pride and Prejudice', 103);
+
+--Insert Authors
+INSERT INTO Authors (AuthorID, AuthorName) VALUES (101, 'F. Scott Fitzgerald');
+INSERT INTO Authors (AuthorID, AuthorName) VALUES (102, 'Harper Lee');
+INSERT INTO Authors (AuthorID, AuthorName) VALUES (104, 'George Orwell'); --Author with no books
+
+
+--Drop Table
+DROP TABLE Books;
+DROP TABLE Authors;
+
+
+--Join Operations
+--Inner Join
+SELECT b.BookID, b.Title, a.AuthorName
+FROM Books b
+INNER JOIN Authors a
+ON b.AuthorID = a.AuthorID;
+
+--Left Join
+SELECT b.BookID, b.Title, a.AuthorName
+FROM Books b
+LEFT JOIN Authors a
+ON b.AuthorID = a.AuthorID;
+
+--Right Join
+SELECT b.BookID, b.Title, a.AuthorName
+FROM Books b
+RIGHT JOIN Authors a
+ON b.AuthorID = a.AuthorID;
+
+--Full Join
+SELECT b.BookID, b.Title, a.AuthorName
+FROM Books b
+FULL OUTER JOIN Authors a
+ON b.AuthorID = a.AuthorID;
+
+--Cross Join
+SELECT b.BookID, b.Title, a.AuthorName
+FROM Books b
+CROSS JOIN Authors a;
